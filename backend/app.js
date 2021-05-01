@@ -16,14 +16,15 @@ const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const xssClean = require("xss-clean");
 
-// FIN MODULES
+/* FIN MODULES
 const db = require('./config/database');
 db.authenticate()
 .then(()=>console.log('database connected...'))
-.catch(err=> console.log('Error:' + err))
+.catch(err=> console.log('Error:' + err))*/
 
 // IMPORTATION ROUTES
 const userRoutes = require("./routes/user");
+const imageRoute = require('./routes/images');
 //const postRoutes = require("./routes/post");
 const { connected } = require('process');
 // FIN IMPORTATIONS
@@ -73,6 +74,8 @@ app.use(xssClean());
 
 // Va servir les routes dédiées aux utilisateurs
 app.use("/api/user", userRoutes);
+app.use("/api/images", imageRoute);
+
 // Va servir les routes dédiées aux posts
 //app.use("/api/post", postRoutes);
 // FIN ROUTES

@@ -1,9 +1,9 @@
 // MODULES
-const db = require('../config/database');
-const User = require('../models/User');
+//const db = require('../config/database');
+const Models = require('../models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const bcrypt = require('bcrypt'); // Pour crypter le mot de passe
+const bcryptjs = require('bcrypt'); // Pour crypter le mot de passe
 const jwt = require("jsonwebtoken"); // Génère un token sécurisé
 const fs = require("fs"); // Permet de gérer les fichiers stockés
 const jwtoken = require("../utils/jwtValidation");
@@ -44,63 +44,77 @@ function checkFileType(file, cb) {
 }
 // MIDDLEWARE SIGNUP  - Inscription de l'utilisateur et hashage du mot de passe
 exports.signup = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-      const email = req.body.email;
-      const name = req.body.name;
-      const departement = req.body.departement;
-      const avatarUrl = '../images/avatar2.png';
-      const password = hash;
-      const newUser = new User({
-        name,
-        email,
-        departement,
-        password,
-        avatarUrl
-      });
-      const newUserCreated = newUser.save().then(user => {
-        if (!user) {
-          res.status(401).json({ message: "New user has not been Created" });
-        } else {
-          res.status(201).json({ message: "New user Created", newUser: user });
-        }
-      });
-
-
-    }).catch(err => res.status(500).json({ error: err.message }))
+  console.log(req.body);
+  Models.User.findOne({where:{email:req.body.email}}).then(result => {
+    if(result){
+        res.status(409).json({
+            message: "Email already exists!",
+        });
+    }else{
+        bcryptjs.genSalt(10, function(err, salt){
+            bcryptjs.hash(req.body.password, salt, function(err, hash){
+                const user = {
+                    name: req.body.name,
+                    email:req.body.email,
+                    departement:req.body.departement,
+                    avatarUrl : '../images/avatar2.png',
+                    password: hash
+                }
+            
+                Models.User.create(user).then(result => {
+                    res.status(201).json({
+                        message: "User created successfully",
+                    });
+                }).catch(error => {
+                    res.status(500).json({
+                        message: "Something went wrong!",
+                    });
+                });
+            });
+        });
+    }
+}).catch(error => {
+    res.status(500).json({
+        message: "Something went wrong!",
+    });
+});
 
 }
+
 
 // MIDDLEWARE LOGIN avec vérification de l'email unique
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  User.findOne({ where: { email } }) // Finding the user in DB
-    .then((user) => {
-      if (!user) {
-        return res.status(401).json({
-          error: "Aucun compte ne correspond à l'adresse email renseingée !", // Return error if user is not found un DB
+  Models.User.findOne({where:{email: email}}).then(user => {
+    if(user === null){
+        res.status(401).json({
+            message: "Invalid credentials!",
         });
-      }
-      //si l'utilisateur existe, vérification du mot de passe
-      bcrypt.compare(password, user.password)
-        .then(valid => {
-          //si le mot de passe est incorrect
-          if (!valid) {
-            return res.status(401).json({ error: "Mot de passe incorrect !" });
-          }
-          const maxAge = 3 * 24 * 60 * 60;
-          const newToken = jwt.sign(
-            { userId: user.id },
-            process.env.TOKEN,
-            { expiresIn: maxAge }
-          );
-          res.status(200).json({ userId: user.id, token: newToken });
-
-        })
-        .catch((error) => res.status(401).json({ error }));
-
-    }).catch(e => res.status(500).json(e));
+    }else{
+        bcryptjs.compare(password, user.password, function(err, result){
+            if(result){
+                const token = jwt.sign({
+                    email: user.email,
+                    userId: user.id
+                }, process.env.TOKEN, function(err, token){
+                    res.status(200).json({
+                        message: "Authentication successful!",
+                        token: token
+                    });
+                });
+            }else{
+                res.status(401).json({
+                    message: "Invalid credentials!",
+                });
+            }
+        });
+    }
+}).catch(error => {
+    res.status(500).json({
+        message: "Something went wrong!",
+    });
+});
 };
 exports.me = (req, res, next) => {
   const data = JSON.parse(req.body.data);
@@ -114,7 +128,7 @@ exports.me = (req, res, next) => {
     } else {
       const userId = token;
 
-      User.findOne({ where: { id: userId } })
+      Models.User.findOne({ where: { id: userId } })
         .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json(error));
     }
@@ -125,7 +139,7 @@ exports.getProfile = (req, res, next) => {
   const userID = res.locals.userID;
   let userIDAsked = req.params.id;
   if (userIDAsked === userID) {
-    User.findOne({ where: { id: userIDAsked } }).then((result) => {
+    Models.User.findOne({ where: { id: userIDAsked } }).then((result) => {
       res.status(200).json(result);
     }).catch((e) => {
       return res.status(500).json(e.message);
@@ -146,11 +160,11 @@ exports.updateUser = (req, res, next) => {
     const token = jwtoken.getUserId(req.headers.authorization);
     const userId = token.userId;
 
-    User.findOne({ where: { id: userId } })
+    Models.User.findOne({ where: { id: userId } })
       .then((user) => {
         if (user.id === userId) {
           //const newUsername = data.firstname + " " + data.lastname;
-          User.update(
+          Models.User.update(
             {
               email: data.email,
               bio: data.bio,
@@ -161,7 +175,7 @@ exports.updateUser = (req, res, next) => {
             { where: { id: userId } }
           )
             .then(() => {
-              User.findOne({ where: { id: userId } })
+              Models.User.findOne({ where: { id: userId } })
                 .then((user) => res.status(200).json(user))
                 .catch((error) => res.status(404).json(error));
             })
@@ -185,19 +199,10 @@ exports.updateProfilPicture = (req, res, next) => {
         const token = jwtoken.getUserId(req.headers.authorization);
         const userId = token.userId;
 
-        User.findOne({ where: { id: userId } })
+        Models.User.findOne({ where: { id: userId } })
           .then((user) => {
             if (user.id === userId) {
-              if (user.avatarUrl) {
-                // Supprimer l'ancienne image du server
-                const filename = user.avatarUrl.split("/images/uploads/")[1];
-                fs.unlink(`images/uploads/${filename}`, (err) => {
-                  if (err) {
-                    console.error(err)
-                  };
-                });
-              }
-              User.update(
+                Models.User.update(
                 {
                   avatarUrl: `${req.protocol}://${req.get("host")}/images/uploads/${req.file.filename
                     }`,
@@ -205,7 +210,7 @@ exports.updateProfilPicture = (req, res, next) => {
                 },
                 { where: { id: user.id } }
               ).then(() => {
-                User.findOne({ where: { id: userId } })
+                Models.User.findOne({ where: { id: userId } })
                   .then((user) => res.status(200).json(user))
                   .catch((error) => res.status(404).json(error));
               })
@@ -235,21 +240,21 @@ exports.deleteUser = (req, res, next) => {
     const userId = token.userId;
     const isAdmin = token.isAdmin;
 
-    User.findOne({ where: { id: paramsId } })
+    Models.User.findOne({ where: { id: paramsId } })
       .then((user) => {
         if (user.id == userId || isAdmin) {
           if (user.avatarUrl) {
             // Supprimer la photo de profil du server
             const filename = user.avatarUrl.split("/images/")[1];
             fs.unlink(`images/${filename}`, () => {
-              User.destroy({ where: { id: user.id } })
+                Models.User.destroy({ where: { id: user.id } })
                 .then(() =>
                   res.status(204).json({ message: "Elément supprimé." })
                 )
                 .catch((error) => res.status(501).json(error));
             });
           } else {
-            User.destroy({ where: { id: user.id } })
+            Models.User.destroy({ where: { id: user.id } })
               .then(() =>
                 res.status(204).json({ message: "Elément supprimé." })
               )
@@ -264,7 +269,7 @@ exports.deleteUser = (req, res, next) => {
 };
 // Retrieve all Users from the database.
 exports.findAllUsers = (req, res, next) => {
-  User.findAll({
+  Models.User.findAll({
     attributes: {
       exclude: ['password'],
     },

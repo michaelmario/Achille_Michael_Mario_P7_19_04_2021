@@ -1,5 +1,5 @@
 <template>
-  <div class="landing">
+  <div class="landing w3-center">
     <div class="imgSocial">
       <div class="w3-card w3-animate-bottom">
         <img
@@ -49,7 +49,7 @@ export default {
 .imgSocial img {
   width: 400px;
   height: 400px;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 h3 {
   font-weight: bolder;
@@ -73,6 +73,16 @@ h3 {
   }
   100% {
     color: #071c72;
+  }
+}
+@media (max-width: 768px) {
+  .landing {
+  height: 900px;
+  margin-top:-51px;
+  }
+  .imgSocial img {
+    width:100%;
+    object-fit: cover;
   }
 }
 </style>

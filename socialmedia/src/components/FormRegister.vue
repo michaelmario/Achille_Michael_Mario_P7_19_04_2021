@@ -28,7 +28,7 @@
       >
         <form @submit="checkForm" method="post">
           <div class="outputMessSignup">
-            <h1 class="mainBlue">
+            <h1 class="mainBlue w3-center">
               Inscrivez-vous au reseau interne de Groupomania
             </h1>
           </div>
@@ -106,7 +106,7 @@
              </div>
             <span class="w3-text-red">{{ confimPasswordErrors }}</span>
           </div>
-          <div>
+          <div class="w3-center">
             <button type="submit" class="w3-button bgBlue w3-margin-right">
               S'inscrire
             </button>
@@ -124,7 +124,7 @@
       >
         <form @submit="checkFormLogin" method="post">
           <div class="outputMessLogin">
-            <h1 class="mainBlue">Connectez-vous à votre compte Groupomania</h1>
+            <h1 class="mainBlue w3-center">Connectez-vous à votre compte Groupomania</h1>
           </div>
           <div class="input-group w3-margin-bottom">
             <div class="input-container">
@@ -151,7 +151,7 @@
             <span class="w3-text-red">{{ loginPasswordErrors }}</span>
              <span class=" w3-text-green w3-padding w3-margin-top">{{loginSucess }}</span>
           </div>
-          <div>
+          <div class="w3-center">
             <button type="submit" class="w3-button bgBlue w3-margin-right">
               Se connecter
             </button>
@@ -163,7 +163,7 @@
               initialiser
             </button>
             <router-link to="/ForgetPassword">
-             <div  class="w3-btn"><i class="fa fa-unlock" aria-hidden="true"></i> Forget Password</div>
+             <div  class="w3-btn w3-margin-left"><i class="fa fa-unlock" aria-hidden="true"></i> Forget Password</div>
           </router-link>
           </div>
         </form>
@@ -375,10 +375,12 @@ checkFormLogin: function (e) {
 <style scoped>
 .formPage {
   width: 100%;
-  height:fit-content;
+  /*height:fit-content;*/
+  height:710px;
   background-size: cover;
   background-position: center;
   margin-top:12px;
+
 }
 .bgBlue {
   background-color: #071c72;
@@ -388,6 +390,9 @@ checkFormLogin: function (e) {
 .marginTop{
   margin-top:100px;
 }
+h1{
+  font-size:1.5em;
+}
 .mainBlue {
   color: #071c72;
   font-weight: bolder;
@@ -396,7 +401,7 @@ option:disabled {
   color: darkblue !important;
 }
 #topImg {
-  height: 700px;
+  height: 720px;
   width: 100%;
 }
 #signup {
@@ -431,6 +436,20 @@ option:disabled {
   min-width: 50px;
   text-align: center;
 }
+@media (max-width:768px){
+  .formContainer{
+    width: 90%;
+    margin-top:-57px;
+}
+.formPage {
+  margin-top:-1px;
+}
+#topImg {
+ margin-top:-20px;
+ 
+}
+}
+
 </style>
 
 

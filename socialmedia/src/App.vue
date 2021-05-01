@@ -1,39 +1,37 @@
-<template>
-<v-app>
-  <Header />
-    <div class="w3-center w3-margin-top">
-      <router-view />
-    </div>
-    <Footer />
-  </v-app>
-</template>
+<template>  
+     <v-app>
+          <Header />
+        <main>
+         <router-view />
+         </main>
+         <Footer />
+     </v-app>
+ </template>
 
 <script>
 import Landing from "./components/Landing";
 import Footer from "./components/Footer";
 import Header from "@/components/Head";
-import auth from './mixins/auth';
+import auth from "./mixins/auth";
 
 export default {
   name: "App",
   components: {
     Landing,
     Footer,
-    Header
+    Header,
   },
   data: () => ({
     active: false,
     isLoggedIn: false,
-    user:{}
+    user: {},
   }),
-  methods: {    
-   
-  },
-  
+  methods: {},
+
   created() {
     this.getUserDetails;
   },
-  mixins:[auth]
+  mixins: [auth],
 };
 </script>
 <style scoped>

@@ -6,8 +6,9 @@ import router from './router'
 import 'w3-css/w3.css';
 import Swal from 'sweetalert2';
 import vuetify from './plugins/vuetify';
+import CKEditor from 'ckeditor4-vue';
 
-
+Vue.use( CKEditor );
 // IMPORT AXIOS ET CONFIGURATION
 import axios from "axios";
 axios.defaults.baseURL = 'http://localhost:3000/api/';
