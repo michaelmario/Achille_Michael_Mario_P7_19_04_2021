@@ -19,7 +19,7 @@
               </p>
               <hr />
               <div class="w3-margin-bottom">
-                <v-btn color="bgBlue" dark :to="'/:'+user.id" title="Profile">
+                <v-btn color="bgBlue" dark :to="'/:' + user.id" title="Profile">
                   <v-icon left> wright </v-icon>
                   Profile
                 </v-btn>
@@ -33,26 +33,6 @@
 
         <!-- Middle Column -->
         <div class="w3-col m7">
-          <div class="w3-row-padding">
-            <div class="w3-col m12">
-              <div class="w3-card w3-round w3-white">
-                <div class="w3-container w3-padding flexContainer">
-                  <div
-                    contenteditable="true"
-                    id="contenteditable"
-                    class="w3-border w3-padding w3-margin-left"
-                  >
-                    Status: Feeling Blue
-                  </div>
-                  <v-btn class="w3-margin-left" color="red" dark>
-                    <v-icon class="w3-margin-right"> email</v-icon>
-                    Envoyer</v-btn
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="w3-container w3-card w3-white w3-round w3-margin">
             <br />
             <img
@@ -65,22 +45,9 @@
             <h4>John Doe</h4>
             <br />
             <hr class="w3-clear" />
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
+
             <div class="w3-row-padding" style="margin: 0 -16px">
-              <div class="w3-half">
-                <img
-                  src="/w3images/lights.jpg"
-                  style="width: 100%"
-                  alt="Northern Lights"
-                  class="w3-margin-bottom"
-                />
-              </div>
-              <div class="w3-half">
+              <div class="w3-container">
                 <img
                   src="/w3images/nature.jpg"
                   style="width: 100%"
@@ -89,6 +56,13 @@
                 />
               </div>
             </div>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </p>
+
             <button
               type="button"
               class="w3-button w3-theme-d1 w3-margin-bottom"
@@ -102,10 +76,8 @@
               <i class="fa fa-comment"></i>  Comment
             </button>
           </div>
-
-          <!-- End Middle Column -->
         </div>
-
+        <!-- End Middle Column -->
         <!-- Right Column -->
         <div class="w3-col m2">
           <div class="w3-card w3-round w3-white w3-center">
@@ -126,13 +98,11 @@
           </div>
           <!-- End Right Column -->
         </div>
-
-        <!-- End Grid -->
       </div>
-
-      <!-- End Page Container -->
+      <!-- End Grid -->
     </div>
-    <br />
+
+    <!-- End Page Container -->
   </div>
 </template>
 <script>
@@ -163,7 +133,7 @@ export default {
       });
     },
   },
-  created() {
+  mounted() {
     this.getUserDetails;
     this.getallUsers();
   },

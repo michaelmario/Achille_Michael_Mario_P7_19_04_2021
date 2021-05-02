@@ -25,7 +25,7 @@ db.authenticate()
 // IMPORTATION ROUTES
 const userRoutes = require("./routes/user");
 const imageRoute = require('./routes/images');
-//const postRoutes = require("./routes/post");
+const postRoutes = require("./routes/post");
 const { connected } = require('process');
 // FIN IMPORTATIONS
 
@@ -75,16 +75,15 @@ app.use(xssClean());
 // Va servir les routes dédiées aux utilisateurs
 app.use("/api/user", userRoutes);
 app.use("/api/images", imageRoute);
-
 // Va servir les routes dédiées aux posts
-//app.use("/api/post", postRoutes);
-// FIN ROUTES
+app.use("/api/post", postRoutes);
 
-// Export de l'application express pour déclaration dans server.js
+// FIN ROUTES
 
 //Gere les erreurs global 
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).json({message:'Something broke!'});
 })
+// Export de l'application express pour déclaration dans server.js
 module.exports = app;

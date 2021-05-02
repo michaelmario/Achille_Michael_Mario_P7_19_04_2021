@@ -25,24 +25,10 @@
          class="logoImg"         
         />        
       </router-link>
+     
       <div class="w3-right w3-hide-small lineHeight">
-          <v-spacer></v-spacer>       
-         <div class="w3-dropdown-hover w3-hide-small">
-          <v-btn color="white" class="w3-button w3-padding-large" title="Notifications">
-            <v-icon>notifications</v-icon
-            ><span class="w3-badge w3-right w3-small w3-green">3</span>
-          </v-btn>
-          <div
-            class="w3-dropdown-content w3-card-4 w3-bar-block"
-            style="width: 300px"
-          >
-            <a href="#" class="w3-bar-item w3-button">One new friend request</a>
-            <a href="#" class="w3-bar-item w3-button"
-              >John Doe posted on your wall</a
-            >
-            <a href="#" class="w3-bar-item w3-button">Jane likes your post</a>
-          </div>              
-         
+         <v-spacer></v-spacer>                 
+         <div class="w3-dropdown-hover w3-hide-small">               
         <v-btn text color="white" to="/" class="mr-2" exact>
          <v-icon> home</v-icon> ACCUEIL
          </v-btn>
@@ -70,7 +56,7 @@
          
      
 <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-<ul class="btnMobile w3-hide-large "> 
+<ul class="btnMobile w3-hide-large w3-padding-right"> 
     <li> 
       <img
           alt="Vuetify Logo"      
@@ -229,11 +215,11 @@ aside {
 
 
 .logoImg {
-  width:75%;
+  width:100%;
   height:50px;  
-  line-height: 4;
-  margin-top:10px;
-  margin-left: 25px;
+  line-height:1;
+  margin-top:0px;
+ 
   
 }
 }
@@ -242,8 +228,8 @@ aside {
         display:block;
         display: flex;
         background-color: #071c72;
-        padding: 20px 0;
-        margin: 0
+        padding: 13px 0;
+        margin:0px;
     }
 
     .btnMobile>li {
@@ -302,7 +288,8 @@ aside {
         background: #f0f0f0;
         border-radius: 2em;
         padding: 2px;
-        transition: all .4s ease
+        transition: all .4s ease;
+
     }
 
     .tgl-light+.tgl-btn:after {
@@ -320,7 +307,9 @@ aside {
         border-radius: 2em;
         padding: 2px;
         transition: all .4s ease;
-        border: 1px solid #e8eae9
+        border: 1px solid #e8eae9;
+        margin-right:19px;
+        margin-top:10px;
     }
 
     .tgl-ios+.tgl-btn:after {

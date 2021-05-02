@@ -5,7 +5,7 @@
       <!-- The Grid -->
       <div class="w3-row">
         <!-- Left Column -->
-        <div class="w3-col m3">
+        <div class="w3-col m3 w3-margin-bottom">
           <!-- Profile -->
           <div class="w3-card w3-round w3-white">
             <div class="w3-container">
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="w3-col m6">
-          <section class="w3-card w3-round w3-white w3-margin-left">
+          <section class="w3-card w3-round w3-white firstSection">
             <form @submit="updateUserProfil" method="post" id="formUpdate">
               <div class="w3-container">
                 <div id="object1"></div>
@@ -151,7 +151,7 @@
           <!-- Fin -->
         </div>
         <div class="w3-col m3">
-          <section class="w3-card w3-round w3-white w3-margin-left">
+          <section class="w3-card w3-round w3-white seconSection">
             <div class="outputMessSignup">
               <h3 class="mainBlue w3-center">
                 Biographe<br />
@@ -166,112 +166,32 @@
         <!-- Fin -->
       </div>
       <div class="w3-row">
-        <div class="w3-col m3 w3-margin-top">
+        <div class="w3-col m3 w3-margin-top w3-margin-bottom">
           <v-btn
             color="#071c72"
             dark
             class="w3-btn"
             @click="isVisible = !isVisible"
-            title="Faire un commentaire SVP"
-          >
+            title="Faire un commentaire SVP">
             <v-icon large> mdi-message-text </v-icon>
             Poster
           </v-btn>
         </div>
-        <div class="w3-col m12 w3-margin-top" v-if="isVisible">
-          <div class="w3-card w3-round w3-white w3-animate-left">
-            <div class="w3-container">
-              <h4 class="w3-center mainBlue">
-                {{ user.name }}
-              </h4>
-              <div class="w3-center w3-margin-bottom">
-                <form class="input-container" enctype="multipart/form-data">
-                  <img
-                    :src="user.avatarUrl"
-                    class="w3-circle"
-                    id="avatar"
-                    alt="Avatar"
-                  />
-                  <input
-                    type="file"
-                    name="image"
-                    ref="image"
-                    class="w3-input w3-border"
-                  />
-                  <div class="w3-right">
-                    <button
-                      type="submit"
-                      class="w3-btn bgBlue w3-text-white btn"
-                      @click="updateAvatar()"
-                      title="Mettre à jour l'image de profil"
-                    >
-                      Envoyer
-                    </button>
-                  </div>
-                </form>
-                <hr>
-                 <div class="w3-container w3-card w3-white w3-round w3-margin">
-            <br />
-            <img
-              src="/w3images/avatar2.png"
-              alt="Avatar"
-              class="w3-left w3-circle w3-margin-right"
-              style="width: 60px"
-            />
-            <span class="w3-right w3-opacity">1 min</span>
-            <h4>John Doe</h4>
-            <br />
-            <hr class="w3-clear" />
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <div class="w3-row-padding" style="margin: 0 -16px">
-              <div class="w3-half">
-                <img
-                  src="/w3images/lights.jpg"
-                  style="width: 100%"
-                  alt="Northern Lights"
-                  class="w3-margin-bottom"
-                />
-              </div>
-              <div class="w3-half">
-                <img
-                  src="/w3images/nature.jpg"
-                  style="width: 100%"
-                  alt="Nature"
-                  class="w3-margin-bottom"
-                />
+        <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="isVisible">
+               <Post />
               </div>
             </div>
-            <button
-              type="button"
-              class="w3-button w3-theme-d1 w3-margin-bottom"
-            >
-              <i class="fa fa-thumbs-up"></i>  Like
-            </button>
-            <button
-              type="button"
-              class="w3-button w3-theme-d2 w3-margin-bottom"
-            >
-              <i class="fa fa-comment"></i>  Comment
-            </button>
           </div>
 
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
+      
+   
 </template>
 <script>
 import VueJwtDecode from "jwt-decode";
 import Editor from "@/components/Editor.vue";
 import moment from "moment";
+import Post from '@/components/Post.vue';
 
 export default {
   name: "UserPage",
@@ -282,7 +202,7 @@ export default {
       isVisible: false,
     };
   },
-  components: { Editor },
+  components: { Editor,Post },
   methods: {
     alertConstant(type, message) {
       // Crée une alerte
@@ -397,6 +317,13 @@ export default {
 .contentPage {
   margin-top: 100px;
 }
+.firstSection{
+  margin:0 10px;
+  
+}
+.seconSection{
+  padding-top:10px;
+}
 .bgBlue {
   background-color: #071c72;
 }
@@ -421,11 +348,32 @@ export default {
   object-fit: cover;
 }
 #avatar {
-  width: 5em;
-  height: 5em;
+  width:2em;
+  height:2em;
   object-fit: cover;
+  margin-top:8px;
+  margin-right:5px;
 }
 .btn {
   height: 3em;
+}
+@media (max-width:768px){
+  .contentPage {
+  margin-top: 30px;
+}
+.firstSection{
+  margin:0 0px;
+  
+}
+.seconSection{
+  padding-top:0px;
+}
+#avatar {
+  width: 2em;
+  height: 2em;
+  object-fit: cover;
+  margin-top:8px;
+  
+}
 }
 </style>
