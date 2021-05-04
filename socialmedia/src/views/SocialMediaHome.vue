@@ -33,48 +33,52 @@
 
         <!-- Middle Column -->
         <div class="w3-col m7">
-          <div class="w3-container w3-card w3-white w3-round w3-margin">
-            <br />
-            <img
-              src="/w3images/avatar2.png"
-              alt="Avatar"
-              class="w3-left w3-circle w3-margin-right"
-              style="width: 60px"
-            />
-            <span class="w3-right w3-opacity">1 min</span>
-            <h4>John Doe</h4>
-            <br />
-            <hr class="w3-clear" />
-
-            <div class="w3-row-padding" style="margin: 0 -16px">
-              <div class="w3-container">
+          <div
+            class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
+          >
+            <div v-for="post in allPosts" :key="post.id">
+              <div class="w3-half">
                 <img
-                  src="/w3images/nature.jpg"
-                  style="width: 100%"
-                  alt="Nature"
-                  class="w3-margin-bottom"
+                  :src="user.avatarUrl"
+                  alt="Avatar"
+                  class="w3-left w3-circle avatar"
                 />
+                <h4>{{ user.name }}</h4>
+              </div>
+              <div class="w3-half">
+                <span class="w3-right w3-margin-top w3-opacity">{{
+                  formatDate(user.createdAt)
+                }}</span>
+              </div>
+              <br />
+              <div class="w3-row-padding">
+                <div class="w3-container">
+                  <div class="w3-card w3-white w3-padding w3-margin-bottom">
+                    <header class="w3-container">
+                      <h4>{{ post.title }}</h4>
+                    </header>
+                    <img
+                      :src="post.imageUrl"
+                      class="w3-image w3-margin-bottom"
+                      :alt="post.title"
+                    />
+                    <br />
+                    <button
+                      type="button"
+                      class="w3-button w3-theme-d1 w3-margin-bottom"
+                    >
+                      <i class="fa fa-thumbs-up"></i>  Like
+                    </button>
+                    <button
+                      type="button"
+                      class="w3-button w3-theme-d2 w3-margin-bottom"
+                    >
+                      <i class="fa fa-comment"></i>  Comment
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-
-            <button
-              type="button"
-              class="w3-button w3-theme-d1 w3-margin-bottom"
-            >
-              <i class="fa fa-thumbs-up"></i>  Like
-            </button>
-            <button
-              type="button"
-              class="w3-button w3-theme-d2 w3-margin-bottom"
-            >
-              <i class="fa fa-comment"></i>  Comment
-            </button>
           </div>
         </div>
         <!-- End Middle Column -->
@@ -94,25 +98,28 @@
                 </div>
               </div>
             </div>
-            <br />
           </div>
           <!-- End Right Column -->
         </div>
+        <br />
       </div>
-      <!-- End Grid -->
     </div>
-
-    <!-- End Page Container -->
+    <!-- End Grid -->
   </div>
+
+  <!-- End Page Container -->
 </template>
 <script>
 import auth from "../mixins/auth";
+import moment from "moment";
+import axios from "axios";
 export default {
   name: "SocialMediaHome",
   data() {
     return {
       user: {},
-      users: [],
+      users: {},
+      allPosts: {},
     };
   },
   components: {},
@@ -122,7 +129,7 @@ export default {
     },
 
     getallUsers: function () {
-      this.$axios.get("user/users").then((datausers) => {
+      axios.get("user/users").then((datausers) => {
         this.users = datausers.data;
         this.users.forEach((element) => {
           if (element === this.users) {
@@ -132,6 +139,33 @@ export default {
         });
       });
     },
+    deletePost: function (event) {
+      var id = event.target.dataset.id;
+      this.allPosts.forEach(function (value) {
+        if (id === value.id) {
+        }
+      });
+      this.$axios
+        .delete(`post/:${id}`, { data: { id: id } })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((err) => console.error(err));
+    },
+    formatDate(date) {
+      moment.locale();
+      let tanggal = moment(date).format("ddd,ha");
+      return tanggal;
+    },
+    getallPosts: function () {
+      this.$axios.get("post/").then((dataPost) => {
+        this.allPosts = dataPost.data;
+        console.log(this.allPosts);
+      });
+    },
+  },
+  created() {
+    this.getallPosts();
   },
   mounted() {
     this.getUserDetails;
@@ -160,5 +194,12 @@ export default {
 .profile {
   height: 50px;
   width: 50px;
+}
+.avatar {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  margin-top: 8px;
+  margin-right: 15px;
 }
 </style>

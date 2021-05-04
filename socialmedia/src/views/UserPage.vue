@@ -115,7 +115,7 @@
                 </div>
                 <div class="input-group w3-margin-bottom">
                   <form class="input-container" enctype="multipart/form-data">
-                    <v-icon dark>update</v-icon>
+                    <v-icon dark>image</v-icon>
                     <input
                       type="file"
                       name="image"
@@ -166,19 +166,31 @@
         <!-- Fin -->
       </div>
       <div class="w3-row">
-        <div class="w3-col m3 w3-margin-top w3-margin-bottom">
+        <div class="w3-col m6 w3-margin-top w3-margin-bottom">
           <v-btn
             color="#071c72"
             dark
             class="w3-btn"
             @click="isVisible = !isVisible"
-            title="Faire un commentaire SVP">
+            title="Ecrire votre  commentaire SVP">
             <v-icon large> mdi-message-text </v-icon>
             Poster
+          </v-btn>
+          <v-btn
+                color="red"
+                dark
+                  class="w3-btn bgBlue w3-text-white btn w3-margin-left"
+                  title="Modifier votre post"                  
+                  @click="Visible = !Visible"
+                ><v-icon left dark> edit </v-icon>
+                  Modifier 
           </v-btn>
         </div>
         <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="isVisible">
                <Post />
+              </div>
+              <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="Visible">
+               <ModifyPost />
               </div>
             </div>
           </div>
@@ -192,6 +204,7 @@ import VueJwtDecode from "jwt-decode";
 import Editor from "@/components/Editor.vue";
 import moment from "moment";
 import Post from '@/components/Post.vue';
+import ModifyPost from '@/components/ModifyPost.vue';
 
 export default {
   name: "UserPage",
@@ -200,9 +213,10 @@ export default {
       user: {},
       messageError: "",
       isVisible: false,
+       Visible: false,
     };
   },
-  components: { Editor,Post },
+  components: { Editor,Post ,ModifyPost},
   methods: {
     alertConstant(type, message) {
       // Crée une alerte

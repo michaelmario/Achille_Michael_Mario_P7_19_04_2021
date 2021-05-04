@@ -19,7 +19,7 @@ router.post("/", auth, multer, postCtrl.addPost);
 router.get("/", auth, postCtrl.getAllPosts);
 
 // Modifier un post
-router.put("/:id", auth, multer, postCtrl.modifyPost);
+router.put("/:id", auth, postCtrl.modifyPost);
 
 // Supprimer un post
 router.delete("/:id", auth, postCtrl.deletePost);

@@ -1,50 +1,96 @@
 const models = require("../models");
 const jwt = require("../utils/jwtValidation");
 const fs = require("fs");
+const multer = require("multer");
+const path = require('path');
+const storage = multer.diskStorage({
+  destination: './images/',
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
 
 // Seuls les caractères spéciaux présents dans la régex suivante sont autorisés :
 const regex = /^[A-Za-z\d\s.,;:!?"()/%-_'éèêëà#@ô^öù*ç€$£≠÷°]*$/;
 
-exports.addPost = (req, res) => {
-  const data = JSON.parse(req.body.title);
-  const image = req.file;
-
-  if (!data || !image || !req.headers.authorization || !regex.test(data)) {
-    res.status(400).json({ message: "Requête erronée." });
-  } else {
-    const token = jwt.getUserId(req.headers.authorization);
-    const userId = token.userId;
-
-    models.Post.create({
-      title: data,
-      imageUrl: `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`,
-      UserId: userId,
-    })
-      .then((post) => {
-        models.Post.findOne({
-          where: { id: post.id },
-          include: [
-            {
-              model: models.User,
-              attributes: ["imageUrl", "username", "lastname", "firstname"],
-            },
-          ],
-        })
-          .then((post) => res.status(200).json(post))
-          .catch((error) => res.status(404).json(error));
-      })
-      .catch((error) => res.status(500).json(error));
+// Init Upload
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
   }
-};
+}).single('image');
+// Check File Type
+function checkFileType(file, cb) {
+  const MIME_TYPES = {
+    "image/jpg": "jpg",
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/gif":"gif"
+  };
+  
+  // Allowed ext
+  const filetypes = MIME_TYPES[file.mimetype];
+  // Check ext
+  const extname = file.originalname.split(".")[0].split(" ").join("_");  
+  // Check mime
+  const mimetype = filetypes;
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
+
+
+exports.addPost = (req, res) => {  
+    const data = req.body.title;
+    const image = req.file;   
+      if (image == undefined) {
+        res.status(422).json({ msg: 'Error: No File Selected!' });
+      } else {
+
+        //console.log(image)
+        if (!data || !image || !req.headers.authorization || !regex.test(data)) {
+          res.status(400).json({ message: "Requête erronée." });
+        } else {
+          const token = jwt.getUserId(req.headers.authorization);
+          const userId = token.userId;
+          models.Post.create({
+            title: data,
+            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
+              }`,
+            UserId: userId,
+          })
+            .then((post) => {
+              models.Post.findOne({
+                where: { id: post.id },
+                include: [
+                  {
+                    model: models.User,
+                    attributes: ["avatarUrl", "name", "email", "departement", "bio"],
+                  },
+                ],
+              })
+                .then((post) => res.status(200).json(post))
+                .catch((error) => res.status(404).json(error));
+            })
+            .catch((error) => res.status(500).json(error));
+        }
+      }
+    }
+  
+
 
 exports.getAllPosts = (req, res) => {
   models.Post.findAll({
     include: [
       {
         model: models.User,
-        attributes: ["imageUrl", "username", "lastname", "firstname"],
+        attributes: ["avatarUrl", "name", "email", "departement", "bio"],
       },
     ],
     order: [["createdAt", "DESC"]],
@@ -60,86 +106,72 @@ exports.getAllPosts = (req, res) => {
 };
 
 exports.modifyPost = (req, res) => {
-  const data = req.file
-    ? {
-        ...JSON.parse(req.body.content),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`,
-      }
-    : {
-        ...JSON.parse(req.body.content),
-      };
+  upload(req, res, (err) => {
+    if (err) {
+      res.status(400).json({ msg: err });
+    } else {
+      if (req.file == undefined) {
+        res.status(422).json({ msg: 'Error: No File Selected!' });
+      } else {
+        const token = jwt.getUserId(req.headers.authorization);
+        const userId = token.userId;
+        const postId = req.params.id;
 
-  if (
-    !data ||
-    !data.title ||
-    !data.imageUrl ||
-    !req.params.id ||
-    !req.headers.authorization ||
-    !regex.test(data.title) ||
-    !regex.test(data.image)
-  ) {
-    res.status(400).json({ message: "Requête erronée." });
-  } else {
-    const token = jwt.getUserId(req.headers.authorization);
-    const userId = token.userId;
-    const postId = req.params.id;
-
-    models.Post.findOne({ where: { id: postId } })
-      .then((post) => {
-        if (post.userId == userId) {
-          if (req.file) {
-            // Supprimer l'ancienne image du server
-            const filename = post.imageUrl.split("/images/")[1];
-            fs.unlink(`images/${filename}`, (err) => {
-              if (err) throw err;
-            });
-          }
-          models.Post.update(
-            {
-              title: data.title,
-              imageUrl: data.imageUrl,
-              updatedAt: new Date(),
-            },
-            { where: { id: post.id } }
-          )
-            .then(() => {
-              models.Post.findOne({
-                where: { id: postId },
-                include: [
-                  {
-                    model: models.User,
-                    attributes: [
-                      "imageUrl",
-                      "username",
-                      "lastname",
-                      "firstname",
+        models.Post.findOne({ where: { id: postId } })
+          .then((post) => {
+            if (post.userId == userId) {
+              const filename = post.imageUrl.split("images/")[1];
+              fs.unlinkSync(`images/${filename}`);
+             
+              models.Post.update(
+                {
+                  title: req.body.title,
+                  imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
+                    }`,
+                  updatedAt: new Date(),
+                },
+                { where: { id: post.id } }
+              )
+                .then(() => {
+                  models.Post.findOne({
+                    where: { id: postId },
+                    include: [
+                      {
+                        model: models.User,
+                        attributes: [
+                          "avatarUrl",
+                          "name",
+                          "email",
+                          "departement",
+                          "bio",
+                        ],
+                      },
                     ],
-                  },
-                ],
-              })
-                .then((post) => res.status(200).json(post))
-                .catch((error) => res.status(404).json(error));
-            })
-            .catch((error) => res.status(501).json(error));
-        } else {
-          res.status(403).json({ message: "Action non autorisée." });
-        }
-      })
-      .catch((error) => res.status(500).json(error));
-  }
-};
+                  })
+                    .then((post) => res.status(200).json(post))
+                    .catch((error) => res.status(404).json(error));
+                })
+                .catch((error) => res.status(501).json(error));
+            } else {
+              res.status(403).json({ message: "Action non autorisée." });
+            }
+          })
+          .catch((error) => res.status(500).json(error));
+      }
+    }
+  })
+}
 
 exports.deletePost = (req, res) => {
-  if (!req.params.id || !req.headers.authorization) {
+  console.log(req.body)
+  if (!req.body.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête incomplète." });
   } else {
     const token = jwt.getUserId(req.headers.authorization);
     const userId = token.userId;
     const isAdmin = token.isAdmin;
 
-    models.Post.findOne({ where: { id: req.params.id } })
+    models.Post.findOne({ where: { id: req.body.id } })
       .then((post) => {
         if (post.userId == userId || isAdmin) {
           console.log("--------- delete post");
@@ -149,7 +181,7 @@ exports.deletePost = (req, res) => {
             const filename = post.imageUrl.split("/images/")[1];
             fs.unlink(`images/${filename}`, () => {
               models.Post.destroy({
-                where: { id: req.params.id },
+                where: { id: req.body.id },
               })
                 .then(() =>
                   res.status(200).json({ message: "Le post a été supprimé !" })
@@ -157,7 +189,7 @@ exports.deletePost = (req, res) => {
                 .catch((err) => res.status(500).json(err));
             });
           } else {
-            models.Post.destroy({ where: { id: req.params.id } })
+            models.Post.destroy({ where: { id: req.body.id } })
               .then(() =>
                 res.status(200).json({ message: "Elément supprimé." })
               )
