@@ -63,6 +63,10 @@
                       :alt="post.title"
                     />
                     <br />
+                    <div class="w3-container w3-margin">
+                      <p >{{comment}}</p>
+                    </div>
+                    <div class="w3-container w3-margin">
                     <button
                       type="button"
                       class="w3-button w3-theme-d1 w3-margin-bottom"
@@ -72,9 +76,30 @@
                     <button
                       type="button"
                       class="w3-button w3-theme-d2 w3-margin-bottom"
+                      @click="displayForm"
+                      :id="post.id"
                     >
                       <i class="fa fa-comment"></i>  Comment
                     </button>
+                    
+                    <div :data-id="post.id" class="w3-container">
+                         <div class="show">
+                         <div class="input-container">
+                          <v-icon dark>edit</v-icon>
+                          <input
+                            class="w3-input w3-border contenteditable"
+                            type="text"
+                            placeholder="Commentaire....."
+                            name="title"
+                            v-model="commentaire"
+                          />
+                          <button  type="button" class="w3-button bgBlue">
+                           <v-icon class="w3-margin-right" dark>send</v-icon>
+                          </button>
+                        </div>
+                      </div>
+                     </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -120,6 +145,9 @@ export default {
       user: {},
       users: {},
       allPosts: {},
+      show: false,
+      comment: "",
+      comentaire:""
     };
   },
   components: {},
@@ -160,8 +188,23 @@ export default {
     getallPosts: function () {
       this.$axios.get("post/").then((dataPost) => {
         this.allPosts = dataPost.data;
-        console.log(this.allPosts);
       });
+    },
+    displayForm: function (event) {
+      let child = event.target.parentNode.lastChild.dataset.id;
+      let container = event.target.parentNode.children[2].lastChild;
+      let buttonId = event.target.id;
+      console.log(container)
+      let containBtn = [];
+      containBtn.push(buttonId, child);
+      if (containBtn[0] === containBtn[1]) {
+        if(container)
+           container.classList.add("active"); 
+             this.comentaire =this.comment;        
+      }else{
+         container.classList.add("active");  
+        
+      }
     },
   },
   created() {
@@ -202,4 +245,26 @@ export default {
   margin-top: 8px;
   margin-right: 15px;
 }
+.show {
+  display: none;
+}
+.active {
+   display:block;   
+}
+.input-container {
+  display: flex;
+  width: 100%;
+}
+.input-container > .v-icon {
+  padding: 10px;
+  color: white;
+  background-color: blue;
+  min-width: 50px;
+  text-align: center;
+}
+.bgBlue{
+background-color: blue;
+color:white;
+}
+
 </style>

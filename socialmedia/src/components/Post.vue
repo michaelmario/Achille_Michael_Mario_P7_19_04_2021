@@ -144,7 +144,7 @@ export default {
       return tanggal;
     },
     deletePost: function (event) {
-      var id = event.target.dataset.id;
+      let id = event.target.dataset.id;
       this.allPosts.forEach(function (value) {
         if (id === value.id) {
         }
