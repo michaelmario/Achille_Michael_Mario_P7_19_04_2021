@@ -1,5 +1,5 @@
 <template>
-  <div class="admin">
+  <div class="admin" v-if="isAdmin">
     <div class="w3-container w3-content marginTop fullPage">
       <!-- The Grid -->
       <div class="w3-row">
@@ -37,17 +37,7 @@
                   class="w3-margin-right"
                   title="Mettre à jour mes infos">
                   <v-icon dark>update</v-icon>
-                </v-btn>
-                <v-btn
-                  color="red"
-                  dark
-                  @click="delecteUser()"
-                  title="Supprimer mes infos"
-                >
-                 <v-icon  left> delete </v-icon>
-                  Suprimer
-                </v-btn>
-               
+                </v-btn>              
               </div>
             </div>
           </div>
@@ -140,39 +130,13 @@
           </div>
           <br />
 
-          <!-- Alert Box -->
-          <div
-            class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small"
-          >
-            <span
-              onclick="this.parentElement.style.display='none'"
-              class="w3-button w3-theme-l3 w3-display-topright"
-            >
-              <i class="fa fa-remove"></i>
-            </span>
-            <p><strong>Hey!</strong></p>
-            <p>People are looking at your profile. Find out who.</p>
-          </div>
-
           <!-- End Left Column -->
         </div>
 
         <!-- Middle Column -->
-        <div class="w3-col m7">
-          <div class="w3-row-padding">
-            <div class="w3-col m12">
-              <div class="w3-card w3-round w3-white">
-                <div class="w3-container w3-padding"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="w3-container w3-card w3-white w3-round w3-margin">
-            <br />
-          </div>
-
-          <div class="w3-container w3-card w3-white w3-round w3-margin">
-            <br />
+        <div class="w3-col m7">         
+            <div class="w3-card w3-white w3-round w3-margin-right w3-margin-left w3-margin-bottom">
+           <div class="w3-padding">
             <img
               src="/w3images/avatar5.png"
               alt="Avatar"
@@ -202,23 +166,22 @@
               <i class="fa fa-comment"></i> &nbsp;Comment
             </button>
           </div>
-
+            </div>
           <!-- End Middle Column -->
+        
         </div>
-
         <!-- Right Column -->
         <div class="w3-col m2">
           <div class="w3-card w3-round bgBlue w3-center">
             <div class="w3-container">
-              <h4 class="w3-white w3-margin-top">contacts</h4>
+              <h4 class="w3-white w3-margin-top">Utilisateurs</h4>
               <div v-for="user in users" :key="user.id">
                 <img
                   :src="user.avatarUrl"
                   alt="Avatar"
                   class="w3-circle profile"
                 /><br />
-                <p class="w3-white">{{ user.name }}</p>
-                <div class="w3-row w3-opacity">
+                <p class="w3-white">{{ user.name }}</p>                
                   <div class="w3-half">
                     <button
                       class="w3-button w3-block w3-white w3-section"
@@ -232,14 +195,13 @@
                   <div class="w3-half">
                     <button
                       class="w3-button w3-block w3-white w3-section"
-                      title="Decline"
-                    >
-                      <v-btn color="red" dark>
+                      title="Suprimer"
+                      :data-id="user.id" >
+                      <v-btn color="red" dark @click="delecteUser">
                         <v-icon dark right> mdi-cancel </v-icon>
                       </v-btn>
                     </button>
-                  </div>
-                </div>
+                  </div>                
               </div>
             </div>
           </div>
@@ -271,6 +233,7 @@ export default {
       user: {},
       users: {},
       token: "",
+      isAdmin:"",
       isModalvisible: false,
       elementsInvalides : 0
     };
@@ -304,6 +267,8 @@ export default {
             })
             .then((data) => {
               this.user = data.data;
+                this.isLoggedIn = true;
+                this.isAdmin = true; 
             })
             .catch((err) => console.log(err));
         }
@@ -337,18 +302,21 @@ export default {
       })
    },
   
-    delecteUser:function(){
-      this.$axios
+    delecteUser:function(event){
+      console.log(event.target.parentNode.parentNode)
+      /*this.$axios
         .delete(`user/${this.user.id}`, {})
         .then((response) => {
           //(this.submitStatus = "OK"),
-          console.log(response), this.$router.go("/");
+          console.log(response), this.$router.go("/Admin");
         })
         .catch((error) =>
           // (this.submitStatus = "ERROR SERVEUR"),
           console.log(error)
         );
     },
+    */
+    }
   
   },
   created() {

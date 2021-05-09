@@ -26,6 +26,7 @@ db.authenticate()
 const userRoutes = require("./routes/user");
 const imageRoute = require('./routes/images');
 const postRoutes = require("./routes/post");
+const commentRoutes = require("./routes/comment");
 const { connected } = require('process');
 // FIN IMPORTATIONS
 
@@ -77,6 +78,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/images", imageRoute);
 // Va servir les routes dédiées aux posts
 app.use("/api/post", postRoutes);
+app.use("/api/comments", commentRoutes);
+
 
 // FIN ROUTES
 

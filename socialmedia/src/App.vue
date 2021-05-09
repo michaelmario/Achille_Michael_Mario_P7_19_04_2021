@@ -1,12 +1,12 @@
-<template>  
-     <v-app>
-          <Header />
-        <main>
-         <router-view />
-         </main>
-         <Footer />
-     </v-app>
- </template>
+<template>
+  <v-app>
+    <Header />
+    <main>
+      <router-view />
+    </main>
+    <Footer />
+  </v-app>
+</template>
 
 <script>
 import Landing from "./components/Landing";

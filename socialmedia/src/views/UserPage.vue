@@ -172,39 +172,37 @@
             dark
             class="w3-btn"
             @click="isVisible = !isVisible"
-            title="Ecrire votre  commentaire SVP">
-            <v-icon large> mdi-message-text </v-icon>
+            title="créez votre Post s'il vous plaît">
+            <v-icon left dark> mdi-message-text </v-icon>
             Poster
           </v-btn>
           <v-btn
-                color="red"
-                dark
-                  class="w3-btn bgBlue w3-text-white btn w3-margin-left"
-                  title="Modifier votre post"                  
-                  @click="Visible = !Visible"
-                ><v-icon left dark> edit </v-icon>
-                  Modifier 
+            color="red"
+            dark
+            class="w3-btn bgBlue w3-text-white btn w3-margin-left"
+            title="Modifier votre post"
+            @click="Visible = !Visible"
+            ><v-icon left dark> edit </v-icon>
+            Modifier
           </v-btn>
         </div>
         <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="isVisible">
-               <Post />
-              </div>
-              <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="Visible">
-               <ModifyPost />
-              </div>
-            </div>
-          </div>
-
+          <Post />
         </div>
-      
-   
+        <div class="w3-col m12 w3-margin-top w3-margin-bottom" v-if="Visible">
+          <ModifyPost />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
+
 <script>
 import VueJwtDecode from "jwt-decode";
-import Editor from "@/components/Editor.vue";
 import moment from "moment";
-import Post from '@/components/Post.vue';
-import ModifyPost from '@/components/ModifyPost.vue';
+import Post from "@/components/Post.vue";
+import ModifyPost from "@/components/ModifyPost.vue";
 
 export default {
   name: "UserPage",
@@ -213,18 +211,12 @@ export default {
       user: {},
       messageError: "",
       isVisible: false,
-       Visible: false,
+      Visible: false,
     };
   },
-  components: { Editor,Post ,ModifyPost},
+  components: {Post, ModifyPost },
   methods: {
-    alertConstant(type, message) {
-      // Crée une alerte
-      const dataAlert = this.$data.alert;
-      this.connected = false;
-      dataAlert.type = type;
-      dataAlert.message = message;
-    },
+   
     getUserDetails: function () {
       this.token = localStorage.getItem("token");
       try {
@@ -261,6 +253,7 @@ export default {
       }
     },
     updateUserProfil: function (e) {
+      // update le profil
       let newUser = {
         name: this.user.name,
         email: this.user.email,
@@ -309,12 +302,6 @@ export default {
       let tanggal = moment(date, "Y#071c72YYY-MM-DD HH:mm:ss").format("LLL");
       return tanggal;
     },
-    showEditor: function () {
-      this.isVisible = true;
-      if (this.isvisible) {
-        this.isVisible === false;
-      }
-    },
   },
 
   created() {
@@ -331,12 +318,11 @@ export default {
 .contentPage {
   margin-top: 100px;
 }
-.firstSection{
-  margin:0 10px;
-  
+.firstSection {
+  margin: 0 10px;
 }
-.seconSection{
-  padding-top:10px;
+.seconSection {
+  padding-top: 10px;
 }
 .bgBlue {
   background-color: #071c72;
@@ -362,32 +348,30 @@ export default {
   object-fit: cover;
 }
 #avatar {
-  width:2em;
-  height:2em;
+  width: 2em;
+  height: 2em;
   object-fit: cover;
-  margin-top:8px;
-  margin-right:5px;
+  margin-top: 8px;
+  margin-right: 5px;
 }
 .btn {
   height: 3em;
 }
-@media (max-width:768px){
+@media (max-width: 768px) {
   .contentPage {
-  margin-top: 30px;
-}
-.firstSection{
-  margin:0 0px;
-  
-}
-.seconSection{
-  padding-top:0px;
-}
-#avatar {
-  width: 2em;
-  height: 2em;
-  object-fit: cover;
-  margin-top:8px;
-  
-}
+    margin-top: 30px;
+  }
+  .firstSection {
+    margin: 0 0px;
+  }
+  .seconSection {
+    padding-top: 0px;
+  }
+  #avatar {
+    width: 2em;
+    height: 2em;
+    object-fit: cover;
+    margin-top: 8px;
+  }
 }
 </style>

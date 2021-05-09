@@ -55,12 +55,13 @@
         </form>
       </div>
       <hr />
-      <div
-        v-if="allPosts"
-        class="w3-container w3-card w3-round w3-margin w3-padding example">
+      <div        
+        class="w3-container w3-card w3-round w3-margin w3-padding shadow"
+      >
         <br />
         <div v-for="post in allPosts" :key="post.id">
-          <div class="w3-half">
+          <div v-if="post.UserId === user.id">
+          <div class="w3-half" >
             <img
               :src="post.User.avatarUrl"
               alt="Avatar"
@@ -69,7 +70,7 @@
             <h4>{{ post.User.name }}</h4>
           </div>
           <div class="w3-half">
-            <span class="w3-right w3-opacity">{{
+            <span class="w3-right w3-opacity middle">{{
               formatDate(post.createdAt)
             }}</span>
           </div>
@@ -86,7 +87,8 @@
               />
             </div>
           </div>
-          <div class="w3-margin-top w3-margin-bottom cardBorder w3-padding">
+          <div
+            class="w3-margin-top w3-margin-bottom cardBorder w3-padding">
             <button
               type="submit"
               class="w3-btn w3-red w3-text-white btn"
@@ -99,10 +101,8 @@
             </button>
           </div>
         </div>
-      </div>
-      <div v-else class="w3-margin-top w3-margin-bottom cardBorder w3-padding">
-        <h3 class="w3-text-red">Vous Avez pas de Post</h3>
-      </div>
+        </div>
+      </div>     
     </div>
   </div>
 </template>
@@ -195,9 +195,12 @@ export default {
 .cardBorder {
   border-bottom: 2px solid red;
 }
-.example {
+.shadow {
   border: 1px solid;
   padding: 5px;
   box-shadow: 0px 2px 2px 2px #071c72;
+}
+.middle {
+  vertical-align: middle;
 }
 </style>

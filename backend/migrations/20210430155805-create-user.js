@@ -26,6 +26,9 @@ module.exports = {
       bio: {
         type: Sequelize.STRING
       },
+       isAdmin: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         type: Sequelize.DATE
       },

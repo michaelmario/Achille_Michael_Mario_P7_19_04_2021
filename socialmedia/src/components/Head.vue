@@ -20,7 +20,7 @@
   <div v-else  class="w3-bar bgBlue w3-top navbarClass">
       <router-link to="/" exact>         
          <img
-          alt="Vuetify Logo"      
+          alt="Groupomania"      
           src="../assets/images/icon-left-font-monochrome-white.png"
          class="logoImg"         
         />        
@@ -38,7 +38,7 @@
         <v-btn text to="#" class="mr-2" color="white" exact @click="logOut">
          <v-icon>logout</v-icon> SE DECONNECTER
         </v-btn>
-        <v-btn :to="'/:'+user.id" class="mr-2" exact>
+        <v-btn to="/Your-Profil" class="mr-2" exact>
           <div class="w3-bar-item">
             <img
               :src="user.avatarUrl"
@@ -59,7 +59,7 @@
 <ul class="btnMobile w3-hide-large w3-padding-right"> 
     <li> 
       <img
-          alt="Vuetify Logo"      
+          alt="Groupomania"      
           src="../assets/images/icon-left-font-monochrome-white.png"
          class="logoImg"
          
@@ -88,7 +88,7 @@
         <v-btn text to="#" class="mr-2 mt-4" color="white" exact @click="logOut">
          <v-icon>logout</v-icon> SE DECONNECTER
         </v-btn>
-        <v-btn :to="'/:'+user.id" class="mr-2 mt-4" exact>
+        <v-btn to="/Your-Profil" class="mr-2 mt-4" exact>
           <div class="w3-bar-item">
             <img
               :src="user.avatarUrl"
@@ -109,7 +109,7 @@
 import auth from "../mixins/auth";
 export default {
   name: "Head",
-  data() {
+    data() {
     return {
       active: false,
       isLoggedIn: false,

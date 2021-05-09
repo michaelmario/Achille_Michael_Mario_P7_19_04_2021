@@ -163,7 +163,6 @@ exports.modifyPost = (req, res) => {
 }
 
 exports.deletePost = (req, res) => {
-  console.log(req.body)
   if (!req.body.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête incomplète." });
   } else {

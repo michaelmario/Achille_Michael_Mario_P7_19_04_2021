@@ -1,8 +1,9 @@
 <template>
-  <div v-if="allPosts">
+    <div> 
+     <div v-for="post in allPosts" :key="post.id">
     <div class="w3-container w3-card w3-round w3-margin w3-padding example">
       <br />
-      <div v-for="post in allPosts" :key="post.id">
+     <div v-if="post.UserId === user.id">
         <div class="w3-half w3-margin-bottom">
           <img
             :src="post.User.avatarUrl"
@@ -48,7 +49,7 @@
             />
             
           </div>
-          <hr />
+          <hr class="cardBorder" />
           <div class="w3-margin-top">
             <button
               type="submit"
@@ -60,12 +61,12 @@
               Modifier
             </button>
           </div>
-        </form>
-
-        <div class="w3-margin-top w3-margin-bottom cardBorder w3-padding"></div>
+        </form>      
       </div>
+       <!--<div class="w3-margin-top w3-margin-bottom  w3-padding"></div>-->
     </div>
   </div>
+    </div>
 </template>
 <script>
 import auth from "../mixins/auth";
@@ -75,6 +76,7 @@ export default {
   name: "ModifyPost",
   data() {
     return {
+       user: {},
       allPosts: {},
       title: "",
       id: "",
@@ -87,8 +89,7 @@ export default {
       const image = event.target.image.files[0];
       const formData = new FormData();
       formData.append("title", this.title);
-      formData.append("image", image);
-      
+      formData.append("image", image);      
       this.$axios
         .put(`post/${custId}`, formData)
         .then(() => {
@@ -100,10 +101,11 @@ export default {
     },
   },
   mounted() {
+     this.getUserDetails;
     this.getallPosts;
-      
-    },
-  mixins: [getallPosts],
+  },
+  mixins: [auth, getallPosts], 
+   
 };
 </script>
 <style scoped>

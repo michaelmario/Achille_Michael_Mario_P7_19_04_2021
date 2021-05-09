@@ -19,6 +19,7 @@ router.post("/login", userCtrl.login);
 router.post("/me", userCtrl.me);
 // Récupérer tous les utilisateurs
 router.get("/users", auth, userCtrl.findAllUsers);
+router.get("/role", userCtrl.role);
 
 // Récupérer un utilisateur
 router.get("/:id/profile", auth, userCtrl.getProfile);

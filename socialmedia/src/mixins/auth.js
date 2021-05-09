@@ -1,13 +1,13 @@
 import VueJwtDecode from "jwt-decode";
 export default{
     computed:{
-        getUserDetails() {
+      async getUserDetails() {
          this.token = localStorage.getItem("token");
         try {
           let decoded = VueJwtDecode(this.token);
           this.User = decoded;
           if (this.User) {
-            this.$axios
+          await this.$axios
               .post("user/me", {
                 method: "POST",
                 data: JSON.stringify(this.User),
@@ -19,8 +19,8 @@ export default{
               })
               .then((data) => {
                 this.user = data.data;
-                this.isLoggedIn = true;               
-                
+                this.isLoggedIn = true;
+                this.isAdmin = true;                
               })
               .catch((err) => console.log(err));
           }

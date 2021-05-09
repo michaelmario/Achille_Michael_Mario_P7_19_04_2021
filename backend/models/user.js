@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasMany(models.Post, { onDelete: "CASCADE", hooks: true });
+      models.User.hasMany(models.Comment, { onDelete: "CASCADE", hooks: true });
     }
   };
   User.init({
@@ -21,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     avatarUrl: DataTypes.STRING,
     bio: DataTypes.STRING,
     createdAt: DataTypes.DATE,
-    updateAt: DataTypes.DATE
+    updateAt: DataTypes.DATE,
+    isAdmin: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'User',

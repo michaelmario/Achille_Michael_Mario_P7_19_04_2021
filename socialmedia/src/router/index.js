@@ -39,7 +39,7 @@ const routes = [
    },
   
     {
-    path: '/:id',
+    path: '/Your-Profil',
     name: 'UserPage',
     component: UserPage
   },
