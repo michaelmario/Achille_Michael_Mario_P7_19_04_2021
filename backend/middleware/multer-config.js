@@ -1,10 +1,7 @@
 const multer = require("multer");
 
 const MIME_TYPES = {
-  "image/jpg": "jpg",
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/gif":"gif"
+   "image/gif":"gif"
 };
 
 const storage = multer.diskStorage({
@@ -23,7 +20,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, callback) => {
   const extension = MIME_TYPES[file.mimetype]; 
   // Recherche du type mime du fichier téléchargé
-  if (extension === "jpg" || extension === "png"|| extension === "gif") {
+  if (extension === "gif") {
      // S'assurer qu'il s'agit d'un png ou d'un jpg 
     callback(null, true); 
   } else {

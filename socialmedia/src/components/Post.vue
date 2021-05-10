@@ -1,7 +1,7 @@
  <template>
   <div class="w3-card w3-round w3-white w3-animate-left">
     <div class="w3-container">
-      <div class="w3-col w3-margin-left w3-margin-bottom w3-padding">
+       <div   class="w3-col w3-margin-left w3-margin-bottom w3-padding">
         <div class="w3-half">
           <img
             :src="user.avatarUrl"
@@ -53,14 +53,14 @@
             </div>
           </div>
         </form>
-      </div>
+      </div>      
       <hr />
       <div        
         class="w3-container w3-card w3-round w3-margin w3-padding shadow"
       >
         <br />
         <div v-for="post in allPosts" :key="post.id">
-          <div v-if="post.UserId === user.id">
+          <div v-if="post.UserId === user.id|| user.isAdmin === true">
           <div class="w3-half" >
             <img
               :src="post.User.avatarUrl"
@@ -150,7 +150,7 @@ export default {
         }
       });
       this.$axios
-        .delete(`post/:${id}`, { data: { id: id } })
+        .delete(`post/:${id}`, { data: { id: id , user:this.user.isAdmin} })
         .then(() => {
           window.location.reload();
         })

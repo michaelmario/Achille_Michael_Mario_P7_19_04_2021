@@ -87,13 +87,8 @@
                 id="password"
                 name="password"
                 v-model="user.password"
-              />
-              <i
-                id="pass-status"
-                class="fa fa-eye-slash icon"
-                aria-hidden="true"
-                @click="switchVisibility"
-              ></i>
+              />              
+              <v-icon  @click="switchVisibility" left dark>lock</v-icon>
             </div>
             <span class="w3-text-red">{{ passwordErrors }}</span>
           </div>
@@ -143,7 +138,7 @@
                 v-model="dataUser.email"
               />
             </div>
-            <span class="w3-text-red">{{ loginEmailErrors }}</span>
+            <div class="w3-text-red w3-padding">{{ loginEmailErrors }}</div>
           </div>
           <div class="input-group w3-margin-bottom">
             <div class="input-container">
@@ -155,10 +150,10 @@
                 v-model="dataUser.password"
               />
             </div>
-            <span class="w3-text-red">{{ loginPasswordErrors }}</span>
-            <span class="w3-text-green w3-padding w3-margin-top">{{
+            <div class="w3-text-red w3-padding">{{ loginPasswordErrors }}</div>
+            <div class="w3-text-green w3-padding w3-margin-top">{{
               loginSucess
-            }}</span>
+            }}</div>
           </div>
           <div class="w3-center">
             <button type="submit" class="w3-button bgBlue w3-margin-right">
@@ -166,13 +161,13 @@
             </button>
             <button
               type="button"
-              class="w3-button bgBlue"
+              class="w3-button bgBlue w3-margin-top"
               @click="initialiserLogin"
             >
               initialiser
             </button>
             <router-link to="/ForgetPassword">
-              <div class="w3-btn w3-margin-left">
+              <div class="w3-btn w3-margin-left w3-margin-top">
                 <i class="fa fa-unlock" aria-hidden="true"></i> Forget Password
               </div>
             </router-link>
@@ -230,13 +225,11 @@ export default {
     openSec() {
       this.active = !this.active;
     },
-    switchVisibility: function (e) {
-      e.preventDefault();
-      let passStatus = document.getElementById("pass-status");
-      if (e) {
+    switchVisibility: function (event) {
+      event.preventDefault();     
+      if (event) {
         this.passwordFieldType =
-          this.passwordFieldType === "password" ? "text" : "password";
-        passStatus.className = "fa fa-eye icon";
+          this.passwordFieldType === "password" ? "text" : "password";        
       }
     },
     formValidation(_user) {
@@ -302,7 +295,11 @@ export default {
           })
           .then(() => {
             this.loginSucess =
-              "Votre countre a etait crée vous pouvez connectez Maintenant ";
+              "Votre compte a etait crée vous pouvez connectez Maintenant ";
+              toast({
+                type:'success',
+                title:'Vous pouvez connectez Maintenant'
+              })
           })
           .catch((e) => {
             if (e) {
@@ -441,7 +438,7 @@ option:disabled {
     margin-top: -57px;
   }
   .formPage {
-    margin-top: -1px;
+    margin-top: 60px;
   }
   #topImg {
     margin-top: -20px;

@@ -3,7 +3,7 @@
      <div v-for="post in allPosts" :key="post.id">
     <div class="w3-container w3-card w3-round w3-margin w3-padding example">
       <br />
-     <div v-if="post.UserId === user.id">
+     <div v-if="post.UserId === user.id || user.isAdmin === true">
         <div class="w3-half w3-margin-bottom">
           <img
             :src="post.User.avatarUrl"
@@ -62,8 +62,7 @@
             </button>
           </div>
         </form>      
-      </div>
-       <!--<div class="w3-margin-top w3-margin-bottom  w3-padding"></div>-->
+      </div>      
     </div>
   </div>
     </div>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Connect from '../views/Connect.vue'
 import UserPage from '../views/UserPage.vue';
+import  AllUserPage from '../views/AllUserPage.vue';
 
 
 
@@ -32,16 +33,15 @@ const routes = [
     import(/* webpackChunkName: "SocialMediaHome" */ '@/views/SocialMediaHome'),
    
   },
-  {
-      path: '/Admin',
-       component: () => 
-      import(/* webpackChunkName: "Admin" */ '@/views/Admin'), 
-   },
-  
-    {
-    path: '/Your-Profil',
+   {
+    path: '/:Your-Profil',
     name: 'UserPage',
     component: UserPage
+  },
+  {
+    path: '/AllUserPage',
+    name: 'AllUserPage',
+    component: AllUserPage
   },
 
   

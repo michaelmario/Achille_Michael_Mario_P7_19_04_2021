@@ -9,6 +9,7 @@ const postCtrl = require("../controllers/post");
 
 // IMPORTATION MIDDLEWARES - On importe le middleware auth pour sécuriser les routes et le middleware multer pour la gestion des images
 const auth = require("../middleware/auth"); // Crée un token d'identification
+const authRole = require("../middleware/authRole");
 const multer = require("../middleware/multer-config"); // Permet d'envoyer un fichier dans la requête
 // FIN IMPORTATION
 

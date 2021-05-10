@@ -24,10 +24,7 @@ const upload = multer({
 // Check File Type
 function checkFileType(file, cb) {
   const MIME_TYPES = {
-    "image/jpg": "jpg",
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "image/gif":"gif"
+      "image/gif":"gif"
   };
   
   // Allowed ext
@@ -163,16 +160,16 @@ exports.modifyPost = (req, res) => {
 }
 
 exports.deletePost = (req, res) => {
-  if (!req.body.id || !req.headers.authorization) {
+   if (!req.params.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête incomplète." });
   } else {
     const token = jwt.getUserId(req.headers.authorization);
     const userId = token.userId;
-    const isAdmin = token.isAdmin;
-
+    const isAdmin = req.body.user;
     models.Post.findOne({ where: { id: req.body.id } })
       .then((post) => {
         if (post.userId == userId || isAdmin) {
+          console.log(isAdmin)
           console.log("--------- delete post");
           console.log("post.imageUrl : ", post.imageUrl);
           if (post.imageUrl) {

@@ -29,9 +29,10 @@ export default {
   methods: {},
 
   created() {
-    this.getUserDetails;
+    this.getUserDetails;  
+   
   },
-  mixins: [auth],
+   mixins: [auth],
 };
 </script>
 <style scoped>

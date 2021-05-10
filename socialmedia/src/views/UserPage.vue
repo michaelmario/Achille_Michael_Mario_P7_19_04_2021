@@ -31,6 +31,7 @@
                 >{{ formatDate(user.createdAt) }}
               </p>
               <div class="w3-margin-bottom">
+                <div v-if="user.isAdmin === false">
                 <v-btn
                   color="red"
                   dark
@@ -43,6 +44,7 @@
                 <div v-if="messageError">
                   {{ messageError }}
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -316,7 +318,7 @@ export default {
   background-color: #ccc;
 }
 .contentPage {
-  margin-top: 100px;
+  margin-top:30px;
 }
 .firstSection {
   margin: 0 10px;
@@ -359,7 +361,7 @@ export default {
 }
 @media (max-width: 768px) {
   .contentPage {
-    margin-top: 30px;
+    margin-top: 80px;
   }
   .firstSection {
     margin: 0 0px;

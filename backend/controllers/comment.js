@@ -44,7 +44,7 @@ exports.addComment = (req, res) => {
 };
 
 exports.getCommentsFromPost = (req, res, next) => { 
-  console.log(req.body)  
+   
   if (!req.params.id) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
@@ -119,12 +119,13 @@ exports.modifyComment = (req, res) => {
 };
 
 exports.deleteComment = (req, res) => {
+  console.log(req.body)
   if (!req.params.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
     const token = jwt.getUserId(req.headers.authorization);
     const userId = token.userId;
-    const isAdmin = token.isAdmin;
+    const isAdmin = req.body.user;
 
     models.Comment.findOne({ where: { id: req.params.id } })
       .then((comment) => {
@@ -215,9 +216,7 @@ exports.getLikesFromComment = (req, res, next) => {
 };
 
 exports.getAllComments =(req,res)=>{
-  console.log(req.body)
- 
-    models.Comment.findAll({    
+      models.Comment.findAll({    
       include: [
         {
           model: models.User,

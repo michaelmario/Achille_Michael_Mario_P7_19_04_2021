@@ -16,6 +16,7 @@ module.exports = (req, res, next) => { // Vérifie si le token est bon
     // Vérifier s'il correspond à la clé de jeton secrète
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
+    const isAdmin = decodedToken.isAdmin;
     
     if (req.body.userId && req.body.userId !== userId) {
       throw "userId non valable !";

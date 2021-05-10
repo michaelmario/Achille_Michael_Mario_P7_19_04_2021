@@ -21,11 +21,19 @@ Vue.prototype.$axios = axios;
 
 window.Swal = Swal;
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'center',
+  showConfirmButton: false,
+  timer: 3000
+});
 
+window.Toast = Toast;
 
 Vue.config.productionTip = false
 
 new Vue({
+  mode:'history',
   router,
   vuetify,
   render: h => h(App)
