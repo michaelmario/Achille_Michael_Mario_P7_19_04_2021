@@ -121,14 +121,14 @@
                   </div>
                   <footer class="w3-margin-top">
                     <div class="w3-row">
-                      <div class="w3-col m3">
+                      <div class="w3-col m4 w3-center">
                         <v-btn title="Aimer le post">
                           <v-icon large color="blue darken-2">thumb_up</v-icon>
                         </v-btn>
                       </div>
-                      <div class="w3-col m2">
+                      <div class="w3-col m4 w3-center">
                         <v-btn
-                          class="w3-margin-right"
+                          class="w3-margin-right marginTopSmall"
                           title="Ne pas aimer le post"
                         >
                           <v-icon large color="blue darken-2"
@@ -136,16 +136,15 @@
                           >
                         </v-btn>
                       </div>
-                      <div class="w3-col m3">
+                      <div class="w3-col m4 w3-center">
                         <v-btn
                           type="button"
-                          class="w3-button w3-theme-d2 w3-margin-bottom w3-margin-left"
+                          class="w3-button w3-theme-d2 w3-margin-bottom marginTopSmall"
                           title="Commmenter le post"
                           @click="displayForm"
                           :data-id="post.id"
                         >
-                          <v-icon large color="blue darken-2">chat</v-icon>
-                           Commentaire
+                          <v-icon large color="blue darken-2">chat</v-icon>                          
                         </v-btn>
                       </div>
                     </div>
@@ -447,6 +446,9 @@ export default {
   .Centercontainer {
     margin-left: 0px;
     margin-right: 0px;
+  }
+  .marginTopSmall{
+   margin-top:16px;
   }
 }
 @media (min-width: 800px) {

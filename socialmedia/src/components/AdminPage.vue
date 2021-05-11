@@ -199,14 +199,14 @@
                   </div>
                   <footer class="w3-margin-top">
                     <div class="w3-row">
-                      <div class="w3-col m4">
+                      <div class="w3-col m4 w3-center">
                         <v-btn title="Aimer le post">
                           <v-icon large color="blue darken-2">thumb_up</v-icon>
                         </v-btn>
                       </div>
-                      <div class="w3-col m4">
+                      <div class="w3-col m4 w3-center">
                         <v-btn
-                          class="w3-margin-right"
+                          class="w3-margin-right marginTopSmall"
                           title="Ne pas aimer le post"
                         >
                           <v-icon large color="blue darken-2"
@@ -214,10 +214,10 @@
                           >
                         </v-btn>
                       </div>
-                      <div class="w3-col m4">
+                      <div class="w3-col m4 w3-center">
                         <v-btn
                           type="button"
-                          class="w3-margin-left"
+                          class="w3-margin-left marginTopSmall"
                           title="Commmenter le post"
                           @click="displayForm"
                           :data-id="post.id"
@@ -525,6 +525,9 @@ export default {
   }
   .flexContainer {
     flex-direction: column;
+  }
+  .marginTopSmall{
+    margin-top:16px;
   }
 }
 @media (max-width: 900px) {

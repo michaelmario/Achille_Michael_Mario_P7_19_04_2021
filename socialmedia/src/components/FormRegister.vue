@@ -161,13 +161,13 @@
             </button>
             <button
               type="button"
-              class="w3-button bgBlue w3-margin-top"
+              class="w3-button bgBlue w3-margin-right marginTopSmall"
               @click="initialiserLogin"
             >
               initialiser
             </button>
             <router-link to="/ForgetPassword">
-              <div class="w3-btn w3-margin-left w3-margin-top">
+              <div class="w3-btn w3-margin-left w3-margin-left marginTopSmall">
                 <i class="fa fa-unlock" aria-hidden="true"></i> Forget Password
               </div>
             </router-link>
@@ -442,6 +442,9 @@ option:disabled {
   }
   #topImg {
     margin-top: -20px;
+  }
+  .marginTopSmall{
+    margin-top:20px;
   }
 }
 </style>
