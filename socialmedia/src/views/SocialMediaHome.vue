@@ -2,39 +2,46 @@
   <div class="w3-container socialMedia">
     <!-- Page Container -->
     <div class="w3-container w3-content contentPage">
-       <div v-if="havePost" >
-      <!-- The Grid -->
-      <div class="w3-row">
-        <!-- Left Column -->
-        <div v-if="!user.isAdmin">
-          <div class="w3-col m3">     
-            <!-- Profile -->
-            <div class="w3-card w3-round w3-white">
-              <div class="w3-container">
-                <h4 class="w3-center">{{ user.name }}</h4>
-                <p class="w3-center">
-                  <img
-                    v-bind:src="user.avatarUrl"
-                    class="w3-circle profile"
-                    alt="Profile"
-                  />
-                </p>
-                <hr />
-                <div class="w3-center w3-margin-bottom">
-                  <v-btn color="bgBlue" dark to="/Your-Profil" title="Profile">
-                    <v-icon left> user </v-icon>
-                    Profile
-                  </v-btn>
+      <div v-if="havePost">
+        <!-- The Grid -->
+        <div class="w3-row">
+          <!-- Left Column -->
+          <div v-if="!user.isAdmin">
+            <div class="w3-col m3">
+              <!-- Profile -->
+              <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                  <h4 class="w3-center">{{ user.name }}</h4>
+                  <p class="w3-center">
+                    <img
+                      v-bind:src="user.avatarUrl"
+                      class="w3-circle profile"
+                      alt="Profile"
+                    />
+                  </p>
+                  <hr />
+                  <div class="w3-center w3-margin-bottom">
+                    <v-btn
+                      color="bgBlue"
+                      dark
+                      to="/Your-Profil"
+                      title="Profile"
+                    >
+                      <v-icon left> user </v-icon>
+                      Profile
+                    </v-btn>
+                  </div>
                 </div>
               </div>
+              <br />
+              <!-- End Left Column -->
             </div>
-            <br />
-            <!-- End Left Column -->
-          </div>
-          <!-- Middle Column -->
-          <div class="w3-col m6">
-            <div v-for="post in allPosts" :key="post.id">
-                <div class="w3-card  w3-container w3-white round w3-padding w3-margin-bottom Centercontainer">
+            <!-- Middle Column -->
+            <div class="w3-col m6">
+              <div v-for="post in allPosts" :key="post.id">
+                <div
+                  class="w3-card w3-container w3-white round w3-padding w3-margin-bottom Centercontainer"
+                >
                   <div class="w3-half">
                     <img
                       :src="post.User.avatarUrl"
@@ -94,7 +101,7 @@
                           {{ formatDate(comment.createdAt) }}
                         </div>
                       </div>
-                      </div>
+                    </div>
                     <hr />
                   </div>
                   <div :data-id="post.id" id="formComment" class="show">
@@ -121,22 +128,19 @@
                   </div>
                   <footer class="w3-margin-top">
                     <div class="w3-row">
-                      <div class="w3-col m4 w3-center">
-                        <v-btn title="Aimer le post">
-                          <v-icon large color="blue darken-2">thumb_up</v-icon>
-                        </v-btn>
-                      </div>
-                      <div class="w3-col m4 w3-center">
-                        <v-btn
-                          class="w3-margin-right marginTopSmall"
-                          title="Ne pas aimer le post"
+                      <div class="w3-col m5 w3-center">
+                        <button
+                          title="Aimer le post"
+                          @click="userLike"
+                          :data-id="post.id"
                         >
-                          <v-icon large color="blue darken-2"
-                            >thumb_down</v-icon
-                          >
-                        </v-btn>
+                          <v-icon large color="blue darken-2">thumb_up</v-icon>
+                        </button>
+                        <span>{{ like }}</span>
                       </div>
-                      <div class="w3-col m4 w3-center">
+
+                      
+                      <div class="w3-col m5 w3-center">
                         <v-btn
                           type="button"
                           class="w3-button w3-theme-d2 w3-margin-bottom marginTopSmall"
@@ -144,64 +148,61 @@
                           @click="displayForm"
                           :data-id="post.id"
                         >
-                          <v-icon large color="blue darken-2">chat</v-icon>                          
+                          <v-icon large color="blue darken-2">chat</v-icon>
                         </v-btn>
                       </div>
                     </div>
                   </footer>
                 </div>
               </div>
+            </div>
 
-             
-            </div>
-         
-          <!-- End Middle Column -->
-          <!-- Right Column -->
-          <div class="w3-col m3">
-            <div class="w3-card w3-round w3-white">
-              <div class="w3-container w3-center w3-margin-bottom">
-                <h4>Utilisateurs</h4>
+            <!-- End Middle Column -->
+            <!-- Right Column -->
+            <div class="w3-col m3">
+              <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-center w3-margin-bottom">
+                  <h4>Utilisateurs</h4>
                   <div v-for="user in users" :key="user.id">
-                <div class="w3-half w3-padding">
-                  <img
-                    :src="user.avatarUrl"
-                    alt="Avatar"
-                    class="w3-circle profile"
-                  /> 
-                   
-                  <br>      
-                  <a @click="linketo">                   
-                 {{ user.name }}
-                  </a>
-                </div>                              
+                    <div class="w3-half w3-padding">
+                      <img
+                        :src="user.avatarUrl"
+                        alt="Avatar"
+                        class="w3-circle profile"
+                      />
+
+                      <br />
+                      <a @click="linketo">
+                        {{ user.name }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <br />
               </div>
-              </div>
-              <br />
+              <!-- End Right Column -->
             </div>
-            <!-- End Right Column -->
+            <br />
           </div>
-          <br />
-        </div>        
-        <div v-else>
-          <AdminPage />
-            </div>               
-             
-              <div v-if="(isModalvisible = true)">
-                <Modal />
-              </div>
-              <!-- End Page Container -->
-            </div> 
-            </div>
-             <div
-                v-else
-                class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
-              >
-                <div class="w3-center w3-padding">
-                  <h2 class="w3-text-red">aucun post à afficher</h2>
-                
-              </div>
-            </div>
+          <div v-else>
+            <AdminPage />
           </div>
+
+          <div v-if="(isModalvisible = true)">
+            <Modal />
+          </div>
+          <!-- End Page Container -->
+        </div>
+      </div>
+      <div
+        v-else
+        class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
+      >
+        <div class="w3-center w3-padding">
+          <h2 class="w3-text-red">aucun post à afficher</h2>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- End Grid -->
 
@@ -231,6 +232,8 @@ export default {
       isModalvisible: false,
       havePost: false,
       btnId: localStorage.getItem("btnId"),
+      like: 0,
+      dislike: 0,
     };
   },
   components: { Modal, AdminPage },
@@ -346,11 +349,51 @@ export default {
           }
         });
     },
+    userLike(event) {
+      let postId = event.target.parentNode.dataset.id;
+      this.$axios
+        .post("post/like", { data: { id: postId, user: this.user } })
+        .then((data) => {
+          if ((data.statusText = "OK")) {
+            if (this.like === 0) {
+              console.log(data)
+              this.like++;
+            } else if (data.statusText != "ok") {
+              this.like = 0;
+            }
+          }
+        }).catch((e) => {
+          if (e) {
+            console.error(e);
+          }
+        });
+    },
+
+    getLike(){
+     this.$axios
+        .get(`post/:id/like`,{ data: { id: this.user.id } })
+        .then((data) => {
+           if ((data.statusText = "OK")) {
+            if (this.like === 0) {
+              this.like = +1;
+            } else if (data.statusText != "ok") {
+              this.like = 0;
+            }
+          }         
+        }).catch((e) => {
+          if (e) {
+            console.error(e);
+          }
+        });
+
+    },
+    
   },
 
   created() {
     this.getallPosts();
     this.get();
+    this.getLike();
   },
   mounted() {
     this.getUserDetails;
@@ -447,8 +490,8 @@ export default {
     margin-left: 0px;
     margin-right: 0px;
   }
-  .marginTopSmall{
-   margin-top:16px;
+  .marginTopSmall {
+    margin-top: 16px;
   }
 }
 @media (min-width: 800px) {

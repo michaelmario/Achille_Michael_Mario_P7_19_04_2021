@@ -49,16 +49,16 @@ function checkFileType(file, cb) {
 // MIDDLEWARE SIGNUP  - Inscription de l'utilisateur et hashage du mot de passe
 exports.signup = (req, res, next) => {
   const data = {
-    name:req.body.name,
-    email:req.body.email,
-    password:req.body.password,
-    departement:req.body.departement
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    departement: req.body.departement
   };
   if (!regex.test(data.name) ||
     !emailRegex.test(data.email) ||
-    !passwordRegex.test(data.password) ||    
-    !regex.test(data.departement) 
-    ) {
+    !passwordRegex.test(data.password) ||
+    !regex.test(data.departement)
+  ) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
     Models.User.findOne({ where: { email: req.body.email } }).then(result => {
@@ -67,28 +67,28 @@ exports.signup = (req, res, next) => {
           message: "Email already exists!",
         });
       }
-    
-    bcryptjs.genSalt(10, function (err, salt) {
-      bcryptjs.hash(req.body.password, salt, function (err, hash) {
-        const user = {
-          name: data.name,
-          email: data.email,
-          departement: data.departement,
-          avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-          password: hash
-        }
 
-        Models.User.create(user).then(result => {
-          res.status(201).json({
-            message: "User created successfully",
+      bcryptjs.genSalt(10, function (err, salt) {
+        bcryptjs.hash(req.body.password, salt, function (err, hash) {
+          const user = {
+            name: data.name,
+            email: data.email,
+            departement: data.departement,
+            avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+            password: hash
+          }
+
+          Models.User.create(user).then(result => {
+            res.status(201).json({
+              message: "User created successfully",
+            });
+          }).catch(error => {
+            res.status(500).json({
+              message: "Something went wrong!",
+            });
           });
-        }).catch(error => {
-          res.status(500).json({
-            message: "Something went wrong!",
-          });
-        });
-      })
-    }).catch(error => {
+        })
+      }).catch(error => {
         res.status(500).json({
           message: "Something went wrong!",
         });
@@ -101,41 +101,42 @@ exports.signup = (req, res, next) => {
 // MIDDLEWARE LOGIN avec vérification de l'email unique
 exports.login = async (req, res, next) => {
   let email = req.body.email;
-  let password = req.body.password; 
-  if(!emailRegex.test(email)|| !passwordRegex.test(password)){
+  let password = req.body.password;
+  if (!emailRegex.test(email) || !passwordRegex.test(password)) {
     res.status(400).json({ message: "Requête erronée." });
-  }else{
-  Models.User.findOne({ where: { email: email } }).then(user => {
-    if (user === null) {
-      res.status(401).json({
-        message: "Invalid credentials!",
-      });
-    } else {
-      bcryptjs.compare(password, user.password, function (err, result) {
-        if (result) {
-          const token = jwt.sign({
-            email: user.email,
-            userId: user.id
-          }, process.env.TOKEN, function (err, token) {
-            res.status(200).json({
-              message: "Authentication successful!",
-              token: token
+  } else {
+    Models.User.findOne({ where: { email: email } }).then(user => {
+      if (user === null) {
+        res.status(401).json({
+          message: "Invalid credentials!",
+        });
+      } else {
+        bcryptjs.compare(password, user.password, function (err, result) {
+          if (result) {
+            const token = jwt.sign({
+              email: user.email,
+              userId: user.id
+            }, process.env.TOKEN, function (err, token) {
+              res.status(200).json({
+                message: "Authentication successful!",
+                token: token
+              });
             });
-          });
-        } else {
-          res.status(401).json({
-            message: "Invalid credentials!",
-          });
-        }
+          } else {
+            res.status(401).json({
+              message: "Invalid credentials!",
+            });
+          }
+        });
+      }
+    }).catch(error => {
+      res.status(500).json({
+        message: "Something went wrong!",
       });
-    }
-  }).catch(error => {
-    res.status(500).json({
-      message: "Something went wrong!",
     });
-  });
- }
+  }
 };
+// Get the current user & authorization 
 exports.me = (req, res, next) => {
   const data = JSON.parse(req.body.data);
   if (!data || !regex.test(data)) {
@@ -155,7 +156,7 @@ exports.me = (req, res, next) => {
 };
 
 
-
+// update user profil
 exports.updateUser = (req, res, next) => {
   const data = req.body;
   if (
@@ -195,7 +196,7 @@ exports.updateUser = (req, res, next) => {
       .catch((error) => res.status(500).json(error));
   }
 }
-
+// Update user image
 exports.updateProfilPicture = (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
@@ -233,7 +234,7 @@ exports.updateProfilPicture = (req, res, next) => {
   });
 
 }
-
+// Delete user from the database
 exports.deleteUser = (req, res, next) => {
   if (!req.params.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête erronée." });
@@ -287,7 +288,6 @@ exports.findAllUsers = (req, res, next) => {
 
 
 
-// FIN MIDDLEWARE
 
 
 

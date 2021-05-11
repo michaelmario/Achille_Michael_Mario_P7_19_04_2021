@@ -199,22 +199,15 @@
                   </div>
                   <footer class="w3-margin-top">
                     <div class="w3-row">
-                      <div class="w3-col m4 w3-center">
-                        <v-btn title="Aimer le post">
+                      <div class="w3-col m5 w3-center">
+                         <button
+                          title="Aimer le post"                          
+                          :data-id="post.id" >
                           <v-icon large color="blue darken-2">thumb_up</v-icon>
-                        </v-btn>
+                        </button>
+                        <span>{{ like }}</span>
                       </div>
-                      <div class="w3-col m4 w3-center">
-                        <v-btn
-                          class="w3-margin-right marginTopSmall"
-                          title="Ne pas aimer le post"
-                        >
-                          <v-icon large color="blue darken-2"
-                            >thumb_down</v-icon
-                          >
-                        </v-btn>
-                      </div>
-                      <div class="w3-col m4 w3-center">
+                       <div class="w3-col m5 w3-center">
                         <v-btn
                           type="button"
                           class="w3-margin-left marginTopSmall"
@@ -302,6 +295,7 @@ export default {
       btnId: localStorage.getItem("btnId"),
       havePost: false,
       haveUser: false,
+      like:0
     };
   },
   components: { Modal },
@@ -430,15 +424,29 @@ export default {
           }
         });
     },
-  },
-  computed: {
-    /* if(_User){
-   console.log(this.User)
- }*/
-  },
+     getLike(){
+     this.$axios
+        .get(`post/:id/like`,{ data: { id: this.user.id } })
+        .then((data) => {
+           if ((data.statusText = "OK")) {
+            if (this.like === 0) {
+              this.like = +1;
+            } else if (data.statusText != "ok") {
+              this.like = 0;
+            }
+          }         
+        }).catch((e) => {
+          if (e) {
+            console.error(e);
+          }
+        });
+     }
+  }, 
+  
   created() {
     this.getallPosts();
     this.get();
+    this.getLike();
   },
   mounted() {
     if (this.getUserDetails) {

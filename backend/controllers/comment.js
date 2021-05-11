@@ -5,10 +5,10 @@ const jwt = require("../utils/jwtValidation");
 // Seuls les caractères spéciaux présents dans la régex suivante sont autorisés :
 const regex = /^[A-Za-z\d\s.,;:!?"()/%-_'éèêëà#@ô^öù*ç€$£≠÷°]*$/;
 
+// Add comment in the database 
 exports.addComment = (req, res) => {
   const data = req.body;
-  console.log(data)
-    if (
+  if (
     !data ||
     !data.content ||
     !data.postId ||
@@ -42,9 +42,8 @@ exports.addComment = (req, res) => {
       .catch((error) => res.status(501).json(error));
   }
 };
-
-exports.getCommentsFromPost = (req, res, next) => { 
-   
+// Get all comments from post
+exports.getCommentsFromPost = (req, res, next) => {    
   if (!req.params.id) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
@@ -68,7 +67,7 @@ exports.getCommentsFromPost = (req, res, next) => {
       .catch((error) => res.status(500).json(error));
   }
 };
-
+// update comment
 exports.modifyComment = (req, res) => {
   const data = req.body;
   if (
@@ -140,81 +139,6 @@ exports.deleteComment = (req, res) => {
       .catch((error) => res.status(500).json(error));
   }
 };
-
-exports.like = (req, res, next) => {
-  const data = JSON.parse(req.body.data);
-
-  if (!data || !req.headers.authorization || !regex.test(data)) {
-    res.status(400).json({ message: "Requête erronée." });
-  } else {
-    const token = jwt.getUserId(req.headers.authorization);
-    const userId = token.userId;
-
-    models.CommentLikes.findOne({ where: { UserId: userId, CommentId: data } })
-      .then((like) => {
-        if (like) {
-          if (userId === like.userId) {
-            models.CommentLikes.destroy({ where: { id: like.id } })
-              .then(() =>
-                res.status(204).json({ message: "Elément supprimé." })
-              )
-              .catch((error) => res.status(501).json(error));
-          } else {
-            res.status(403).json({ message: "Action non autorisée." });
-          }
-        } else {
-          models.CommentLikes.create({ UserId: userId, CommentId: data })
-            .then(() => {
-              models.CommentLikes.findOne({
-                where: { UserId: userId, CommentId: data },
-                include: [
-                  {
-                    model: models.User,
-                    attributes: [
-                        "avatarUrl",
-                        "name",
-                        "email",
-                        "departement",
-                         "bio"
-                    ],
-                  },
-                ],
-              })
-                .then((like) => res.status(200).json(like))
-                .catch((error) => res.status(404).json(error));
-            })
-            .catch((error) => res.status(501).json(error));
-        }
-      })
-      .catch((error) => res.status(500).json(error));
-  }
-};
-
-exports.getLikesFromComment = (req, res, next) => {
-  if (!req.params.id) {
-    res.status(400).json({ message: "Requête erronée." });
-  } else {
-    models.CommentLikes.findAll({
-      where: { commentId: req.params.id },
-      include: [
-        {
-          model: models.User,
-          attributes: ["avatarUrl", "name","email", "departement", "bio"],
-        },
-      ],
-      order: [["createdAt", "ASC"]],
-    })
-      .then((likes) => {
-        if (likes.length > 0) {
-          res.status(200).json(likes);
-        } else {
-          res.status(200).json({ message: "Aucun élément à afficher." });
-        }
-      })
-      .catch((error) => res.status(500).json(error));
-  }
-};
-
 exports.getAllComments =(req,res)=>{
       models.Comment.findAll({    
       include: [

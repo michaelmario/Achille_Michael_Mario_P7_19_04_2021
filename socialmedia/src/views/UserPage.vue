@@ -263,8 +263,7 @@ export default {
         bio: this.user.bio,
         avatarUrl: this.avatarUrl,
       };
-      console.log(newUser);
-      this.$axios.put(`user/:${this.userId}`, newUser).then((data) => {
+       this.$axios.put(`user/:${this.userId}`, newUser).then((data) => {
         this.user = data.data;
         window.location.reload();
       });

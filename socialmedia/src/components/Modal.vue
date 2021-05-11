@@ -79,9 +79,9 @@
                <input type="file"  ref="image" class="w3-input w3-border">
               <div class="w3-right"> 
                  <v-icon>update</v-icon>
-                <v-btn @click="onFileSelected">
+                <button @click="onFileSelected" class="w3-button bgBlue w3-text-white w3-padding">
                 envoyer
-                </v-btn>
+                </button>
            <img v-bind:src="user.avatarUrl" class="w3-circle profile" alt="Profile"></div> 
             </div>
           
