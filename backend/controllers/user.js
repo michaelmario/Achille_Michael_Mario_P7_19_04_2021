@@ -11,6 +11,10 @@ const multer = require("multer");
 const path = require('path');
 // Seuls les caractères spéciaux présents dans la régex suivante sont autorisés :
 const regex = /^[A-Za-z\d\s.,;:!?"()/%-_'éèêëà#@ô^öù*ç€$£≠÷°]*$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%?]{6,}$/;
+
+// Format adresse email
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"']+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 // Set The Storage Engine
 const storage = multer.diskStorage({
   destination: './images/uploads/',
@@ -44,47 +48,63 @@ function checkFileType(file, cb) {
 }
 // MIDDLEWARE SIGNUP  - Inscription de l'utilisateur et hashage du mot de passe
 exports.signup = (req, res, next) => {
-  Models.User.findOne({ where: { email: req.body.email } }).then(result => {
-    if (result) {
-      res.status(409).json({
-        message: "Email already exists!",
-      });
-    } else {
-      bcryptjs.genSalt(10, function (err, salt) {
-        bcryptjs.hash(req.body.password, salt, function (err, hash) {
-          const user = {
-            name: req.body.name,
-            email: req.body.email,
-            departement: req.body.departement,
-            avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-            password: hash
-          }
+  const data = {
+    name:req.body.name,
+    email:req.body.email,
+    password:req.body.password,
+    departement:req.body.departement
+  };
+  if (!regex.test(data.name) ||
+    !emailRegex.test(data.email) ||
+    !passwordRegex.test(data.password) ||    
+    !regex.test(data.departement) 
+    ) {
+    res.status(400).json({ message: "Requête erronée." });
+  } else {
+    Models.User.findOne({ where: { email: req.body.email } }).then(result => {
+      if (result) {
+        res.status(409).json({
+          message: "Email already exists!",
+        });
+      }
+    
+    bcryptjs.genSalt(10, function (err, salt) {
+      bcryptjs.hash(req.body.password, salt, function (err, hash) {
+        const user = {
+          name: data.name,
+          email: data.email,
+          departement: data.departement,
+          avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+          password: hash
+        }
 
-          Models.User.create(user).then(result => {
-            res.status(201).json({
-              message: "User created successfully",
-            });
-          }).catch(error => {
-            res.status(500).json({
-              message: "Something went wrong!",
-            });
+        Models.User.create(user).then(result => {
+          res.status(201).json({
+            message: "User created successfully",
+          });
+        }).catch(error => {
+          res.status(500).json({
+            message: "Something went wrong!",
           });
         });
+      })
+    }).catch(error => {
+        res.status(500).json({
+          message: "Something went wrong!",
+        });
       });
-    }
-  }).catch(error => {
-    res.status(500).json({
-      message: "Something went wrong!",
-    });
-  });
-
+    })
+  }
 }
 
 
 // MIDDLEWARE LOGIN avec vérification de l'email unique
 exports.login = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  let email = req.body.email;
+  let password = req.body.password; 
+  if(!emailRegex.test(email)|| !passwordRegex.test(password)){
+    res.status(400).json({ message: "Requête erronée." });
+  }else{
   Models.User.findOne({ where: { email: email } }).then(user => {
     if (user === null) {
       res.status(401).json({
@@ -114,6 +134,7 @@ exports.login = async (req, res, next) => {
       message: "Something went wrong!",
     });
   });
+ }
 };
 exports.me = (req, res, next) => {
   const data = JSON.parse(req.body.data);
@@ -214,7 +235,7 @@ exports.updateProfilPicture = (req, res, next) => {
 }
 
 exports.deleteUser = (req, res, next) => {
-   if (!req.params.id || !req.headers.authorization) {
+  if (!req.params.id || !req.headers.authorization) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
     const token = jwtoken.getUserId(req.headers.authorization);
