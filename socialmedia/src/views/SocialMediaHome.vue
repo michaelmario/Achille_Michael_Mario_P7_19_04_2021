@@ -175,17 +175,15 @@
                     alt="Avatar"
                     class="w3-circle profile"
                   /> 
-                  <hr/> 
+                   
                   <br>      
                   <a @click="linketo">                   
                  {{ user.name }}
                   </a>
-                </div>
-                <hr class="w3-margin" />
-                <br />               
+                </div>                              
+              </div>
               </div>
               <br />
-              </div>
             </div>
             <!-- End Right Column -->
           </div>
@@ -323,10 +321,9 @@ export default {
         .delete(`user/${id}`, { data: { id: id , user:this.user.isAdmin} })
         .then((response) => {
           (this.submitStatus = "OK"),
-          console.log(response), this.$router.go("/Admin");
+           this.$router.go("/Admin");
         })
-        .catch((error) =>
-          // (this.submitStatus = "ERROR SERVEUR"),
+        .catch((error) =>          
           console.log(error)
         );
     },
@@ -368,7 +365,7 @@ export default {
 }
 .contentPage {
   max-width: 1200px;
-  margin-top:80px;
+  margin-top:40px;
 }
 .Centercontainer{
   margin-left:16px;
@@ -440,6 +437,20 @@ export default {
   }
   .flexContainer {
     flex-direction: column;
+  }
+  .Centercontainer{
+  margin-left:0px;
+  margin-right:0px;
+
+}
+
+}
+@media(min-width:800px){
+ .firstSection {
+  margin: 0 10px;
+}
+.contentPage {
+    margin-top: 100px;
   }
 }
 </style>

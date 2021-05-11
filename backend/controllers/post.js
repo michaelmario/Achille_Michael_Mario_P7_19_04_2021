@@ -1,47 +1,10 @@
 const models = require("../models");
 const jwt = require("../utils/jwtValidation");
 const fs = require("fs");
-const multer = require("multer");
 const path = require('path');
-const storage = multer.diskStorage({
-  destination: './images/',
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
 
 // Seuls les caractères spéciaux présents dans la régex suivante sont autorisés :
 const regex = /^[A-Za-z\d\s.,;:!?"()/%-_'éèêëà#@ô^öù*ç€$£≠÷°]*$/;
-
-// Init Upload
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1000000 },
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  }
-}).single('image');
-// Check File Type
-function checkFileType(file, cb) {
-  const MIME_TYPES = {
-      "image/gif":"gif"
-  };
-  
-  // Allowed ext
-  const filetypes = MIME_TYPES[file.mimetype];
-  // Check ext
-  const extname = file.originalname.split(".")[0].split(" ").join("_");  
-  // Check mime
-  const mimetype = filetypes;
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
-
-
 
 exports.addPost = (req, res) => {  
     const data = req.body.title;
@@ -49,7 +12,6 @@ exports.addPost = (req, res) => {
       if (image == undefined) {
         res.status(422).json({ msg: 'Error: No File Selected!' });
       } else {
-
         //console.log(image)
         if (!data || !image || !req.headers.authorization || !regex.test(data)) {
           res.status(400).json({ message: "Requête erronée." });
@@ -103,17 +65,13 @@ exports.getAllPosts = (req, res) => {
 };
 
 exports.modifyPost = (req, res) => {
-  upload(req, res, (err) => {
-    if (err) {
-      res.status(400).json({ msg: err });
-    } else {
-      if (req.file == undefined) {
+        const title = regex.test(req.body.title )
+       if (req.file == undefined) {
         res.status(422).json({ msg: 'Error: No File Selected!' });
       } else {
         const token = jwt.getUserId(req.headers.authorization);
         const userId = token.userId;
         const postId = req.params.id;
-
         models.Post.findOne({ where: { id: postId } })
           .then((post) => {
             if (post.userId == userId) {
@@ -122,7 +80,7 @@ exports.modifyPost = (req, res) => {
              
               models.Post.update(
                 {
-                  title: req.body.title,
+                  title:title ,
                   imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
                     }`,
                   updatedAt: new Date(),
@@ -155,8 +113,6 @@ exports.modifyPost = (req, res) => {
           })
           .catch((error) => res.status(500).json(error));
       }
-    }
-  })
 }
 
 exports.deletePost = (req, res) => {
@@ -229,10 +185,11 @@ exports.like = (req, res, next) => {
                   {
                     model: models.User,
                     attributes: [
-                      "imageUrl",
-                      "username",
-                      "lastname",
-                      "firstname",
+                      "avatarUrl",
+                          "name",
+                          "email",
+                          "departement",
+                          "bio",
                     ],
                   },
                 ],
@@ -256,7 +213,7 @@ exports.getLikesFromPost = (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["imageUrl", "username", "lastname", "firstname"],
+          attributes: ["avatarUrl", "name", "email","departement","bio",],
         },
       ],
       order: [["createdAt", "ASC"]],

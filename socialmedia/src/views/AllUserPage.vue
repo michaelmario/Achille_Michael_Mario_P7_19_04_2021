@@ -12,13 +12,20 @@
         </header>
 
         <div class="w3-container">
-          <p>1 new friend request</p>
-          <hr />
-          <img src="img_avatar3.png" alt="Avatar" class="w3-left w3-circle" />
-          <p>President/CEO at Mighty Schools...</p>
+        <hr />
+              <p>
+                <v-icon class="w3-margin-right">work</v-icon>
+                {{ user.departement }}
+              </p>
+              <p>
+                <v-icon class="w3-margin-right">location_city</v-icon>
+                {{ user.email }}
+              </p>
+              <p>
+                <v-icon class="w3-margin-right">login</v-icon
+                >{{ formatDate(user.createdAt) }}
+              </p>
         </div>
-
-        <button class="w3-button w3-block w3-dark-grey">+ Connect</button>
       </div>
     </div>
   </div>
@@ -26,6 +33,7 @@
   </div>
 </template>
 <script>
+import moment from "moment";
 export default {
   name: "AllUserPage",
   data() {
@@ -38,6 +46,11 @@ export default {
       this.$axios.get("user/users").then((datausers) => {
         this.users = datausers.data;
       });
+    },
+    formatDate(date) {
+      moment.locale();
+      let tanggal = moment(date).format("ddd,ha");
+      return tanggal;
     },
   },
   mounted() {
@@ -54,6 +67,7 @@ export default {
 .contentPage {
   max-width: 1200px;
   margin-top:180px;
+  height:700px;
 }
 .profile {
   height: 50px;

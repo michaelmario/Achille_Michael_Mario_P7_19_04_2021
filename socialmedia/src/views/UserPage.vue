@@ -31,7 +31,7 @@
                 >{{ formatDate(user.createdAt) }}
               </p>
               <div class="w3-margin-bottom">
-                <div v-if="user.isAdmin === false">
+                <div v-if="!user.isAdmin">
                 <v-btn
                   color="red"
                   dark
@@ -318,7 +318,7 @@ export default {
   background-color: #ccc;
 }
 .contentPage {
-  margin-top:30px;
+  margin-top:80px;
 }
 .firstSection {
   margin: 0 10px;
@@ -375,5 +375,15 @@ export default {
     object-fit: cover;
     margin-top: 8px;
   }
+}
+@media(min-width:800px){
+ .firstSection {
+  margin: 0 10px;
+}
+.contentPage {
+    margin-top: 100px;
+  }
+
+
 }
 </style>

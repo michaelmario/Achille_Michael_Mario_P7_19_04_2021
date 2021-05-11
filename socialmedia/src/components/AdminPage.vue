@@ -137,7 +137,7 @@
         <!-- Middle Column -->
         <div class="w3-col m6 mainContent">
           <div v-for="post in allPosts" :key="post.id">
-            <div v-if="post " class="w3-margin-left w3-round w3-margin-right">
+            <div v-if="post" class="w3-margin-left w3-round w3-margin-right">
               <div class="w3-card w3-white round w3-padding cardComment">
                 <div class="w3-half">
                   <img
@@ -206,7 +206,7 @@
                       >
                         +
                       </button>
-                      <div v-if="isVisible" >
+                      <div v-if="isVisible">
                         <v-btn
                           class="w3-button w3-red w3-margin"
                           title="Suprimer"
@@ -215,15 +215,6 @@
                         >
                           <v-icon left dark> delete </v-icon>
                           suprimer
-                        </v-btn>
-                        <v-btn
-                          class="w3-button w3-blue w3-margin"
-                          title="Suprimer"
-                          :data-id="comment.id"
-                          @click="deleteUser"
-                        >
-                          <v-icon left dark> edit </v-icon>
-                          modifier
                         </v-btn>
                       </div>
                     </div>
@@ -253,12 +244,12 @@
                 </div>
                 <footer class="w3-margin-top">
                   <div class="w3-row">
-                    <div class="w3-col m3">
+                    <div class="w3-col m4">
                       <v-btn title="Aimer le post">
                         <v-icon large color="blue darken-2">thumb_up</v-icon>
                       </v-btn>
                     </div>
-                    <div class="w3-col m2">
+                    <div class="w3-col m4">
                       <v-btn
                         class="w3-margin-right"
                         title="Ne pas aimer le post"
@@ -266,30 +257,29 @@
                         <v-icon large color="blue darken-2">thumb_down</v-icon>
                       </v-btn>
                     </div>
-                    <div class="w3-col m3">
+                    <div class="w3-col m4">
                       <v-btn
                         type="button"
-                        class="w3-button w3-theme-d2 w3-margin-bottom w3-margin-left"
+                        class="w3-margin-left"
                         title="Commmenter le post"
                         @click="displayForm"
                         :data-id="post.id"
                       >
                         <v-icon large color="blue darken-2">chat</v-icon>
-                         Commentaire
                       </v-btn>
                     </div>
                   </div>
                 </footer>
               </div>
             </div>
-             <div
-                v-else
-                class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
-              >
-                <div class="w3-center w3-padding">
-                  <h2 class="w3-text-red">aucun post à afficher</h2>
-                </div>
-             </div>
+            <div
+              v-else
+              class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
+            >
+              <div class="w3-center w3-padding">
+                <h2 class="w3-text-red">aucun post à afficher</h2>
+              </div>
+            </div>
           </div>
         </div>
         <div class="w3-col m3">
@@ -305,9 +295,10 @@
                   />
                 </div>
                 <div class="w3-half w3-padding">
-                  <router-link :to="{path:'/Your-Profil?=' + user.id}">                   
+                   <a href="#" @click="linketo">                   
                  {{ user.name }}
-                  </router-link>
+                  </a>
+                 
                 </div>
                 <hr class="w3-margin" />
                 <br />
@@ -350,32 +341,31 @@ export default {
       commentaire: "",
       active: false,
       allComments: {},
-      isModalvisible: false,      
+      isModalvisible: false,
       btnId: localStorage.getItem("btnId"),
     };
   },
-  components: { Modal},
+  components: { Modal },
   methods: {
+    linketo(){
+     window.location.href= "/AllUserPage";
+    },
     visiblefunc() {
       this.isVisible = !this.isVisible;
     },
-    deletecomment(event){
-     let eventId = event.target.dataset.id;
-     console.log(eventId)
-       this.$axios
-            .delete(`comments/${eventId}`, { data: { user: this.user.isAdmin } })
-            .then(() => {
-               this.$router.replace('SocialMediaHome');
-             // window.location.reload();
-            })
-            .catch((err) => console.error(err));
-   
-
+    deletecomment(event) {
+      let eventId = event.target.parentNode.dataset.id;
+      console.log(eventId);
+      this.$axios
+        .delete(`comments/${eventId}`, { data: { user: this.user.isAdmin } })
+        .then(() => {
+             window.location.reload();
+        })
+        .catch((err) => console.error(err));
     },
     getallUsers: function () {
       axios.get("user/users").then((datausers) => {
         this.users = datausers.data;
-        
       });
     },
     viewModal: function () {
@@ -386,7 +376,7 @@ export default {
     },
     deletePost: function (event) {
       let id = event.target.dataset.id;
-       this.allPosts.forEach(function (value) {
+      this.allPosts.forEach(function (value) {
         if (id === value.id) {
           this.$axios
             .delete(`post/:${id}`, { data: { id: id } })
@@ -409,17 +399,17 @@ export default {
       });
     },
     displayForm: function (event) {
-      let buttonId = event.target.parentNode.dataset.id;
-
+      let buttonId = event.target.parentNode.parentNode.dataset.id;
+      console.log(buttonId);
       let child =
-        event.target.parentNode.parentNode.parentNode.parentElement
+        event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling;
       let container =
-        event.target.parentNode.parentNode.parentNode.parentElement
+        event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling.dataset.id;
       this.containBtn = [];
       this.containBtn.push(child);
-      console.log(this.containBtn);
+      console.log(child);
       if (buttonId === container) {
         if (child.className === "show") {
           child.classList.add("active");
@@ -503,7 +493,7 @@ export default {
 }
 .contentPage {
   max-width: 1200px;
-  margin-top: 80px;
+  margin-top: 40px;
 }
 .flexContainer {
   display: flex;
@@ -567,6 +557,11 @@ export default {
   }
   .flexContainer {
     flex-direction: column;
+  }
+}
+@media (max-width: 900px) {
+  .mainContent {
+    margin-bottom: 40px;
   }
 }
 </style>

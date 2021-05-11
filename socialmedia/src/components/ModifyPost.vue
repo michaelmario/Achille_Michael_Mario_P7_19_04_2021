@@ -37,6 +37,7 @@
               :src="post.imageUrl"
               class="w3-image w3-margin-bottom"
               :alt="post.title"
+              
             />
           </div>
           <div class="input-container">
@@ -86,9 +87,12 @@ export default {
       const title = event.target.title.value;
      let custId = event.target.parentNode.children[3].children[3].children[0].id;
       const image = event.target.image.files[0];
-      const formData = new FormData();
+ 
+      console.log(image)
+      console.log(title)
+     let formData = new FormData();
       formData.append("title", this.title);
-      formData.append("image", image);      
+      formData.append("image", image);     
       this.$axios
         .put(`post/${custId}`, formData)
         .then(() => {
@@ -145,16 +149,4 @@ export default {
 }
 </style>
 
- /* const image = event.target.image.files[0];
-      const formData = new FormData();
-      formData.append("title", this.title);
-      formData.append("image", image);
-       this.$axios
-        .put(`post/:${id}`, formData)
-        .then(() => {
-          window.location.reload();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    */
+ 
