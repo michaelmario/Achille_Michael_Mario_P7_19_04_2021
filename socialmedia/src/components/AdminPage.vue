@@ -1,322 +1,279 @@
 <template>
   <div class="admin">
     <div class="w3-container w3-content fullPage">
-      <!-- The Grid -->
-      <div class="w3-row">
-        <!-- Left Column -->
-        <div class="w3-col m3">
-          <!-- Profile -->
-          <div class="w3-card w3-round w3-white">
-            <div class="w3-container">
-              <h4 class="w3-center">{{ user.name }}</h4>
-              <p class="w3-center">
-                <img
-                  v-bind:src="user.avatarUrl"
-                  class="w3-circle profile"
-                  alt="Profile"
-                />
-              </p>
-              <hr />
-              <p>
-                <v-icon class="w3-margin-right">work</v-icon>
-                {{ user.departement }}
-              </p>
-              <p>
-                <v-icon class="w3-margin-right">location_city</v-icon>
-                {{ user.email }}
-              </p>
-              <p>
-                <v-icon class="w3-margin-right">login</v-icon
-                >{{ formatDate(user.createdAt) }}
-              </p>
-              <div class="w3-margin-bottom">
-                <v-btn
-                  color="indigo"
-                  dark
-                  @click="viewModal()"
-                  class="w3-margin-right"
-                  title="Mettre à jour mes infos"
-                >
-                  <v-icon dark>update</v-icon>
-                </v-btn>
-              </div>
-            </div>
-          </div>
-          <div class="w3-card w3-round">
-            <div class="w3-white">
-              <button
-                onclick="myFunction('Demo1')"
-                class="w3-button w3-block w3-theme-l1 w3-left-align"
-              >
-                <v-icon class="w3-margin-right">groups</v-icon>My Groups
-              </button>
-              <div id="Demo1" class="w3-hide w3-container">
-                <p>Some text..</p>
-              </div>
-              <button
-                onclick="myFunction('Demo2')"
-                class="w3-button w3-block w3-theme-l1 w3-left-align"
-              >
-                <v-icon class="w3-margin-right">folder_special</v-icon>
-                My Events
-              </button>
-              <div id="Demo2" class="w3-hide w3-container">
-                <p>Some other text..</p>
-              </div>
-              <button
-                onclick="myFunction('Demo3')"
-                class="w3-button w3-block w3-theme-l1 w3-left-align"
-              >
-                <v-icon class="w3-margin-right">camera_alt </v-icon>
-                Photos
-              </button>
-              <div id="Demo3" class="w3-hide w3-container">
-                <div class="w3-row-padding">
-                  <br />
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/lights.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/nature.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/mountains.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/forest.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/nature.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                  <div class="w3-half">
-                    <img
-                      src="/w3images/snow.jpg"
-                      style="width: 100%"
-                      class="w3-margin-bottom"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br />
-
-          <!-- Interests -->
-          <div class="w3-card w3-round w3-white w3-hide-small">
-            <div class="w3-container">
-              <h5>Biographie</h5>
-              <p>
-                {{ user.bio }}
-              </p>
-            </div>
-          </div>
-          <br />
-
-          <!-- End Left Column -->
-        </div>
-        <!-- Middle Column -->
-        <div class="w3-col m6 mainContent">
-          <div v-for="post in allPosts" :key="post.id">
-            <div v-if="post" class="w3-margin-left w3-round w3-margin-right">
-              <div class="w3-card w3-white round w3-padding cardComment">
-                <div class="w3-half">
+      <div v-if="havePost">
+        <!-- The Grid -->
+        <div class="w3-row">
+          <!-- Left Column -->
+          <div class="w3-col m3">
+            <!-- Profile -->
+            <div class="w3-card w3-round w3-white">
+              <div class="w3-container" v-if="haveUser">
+                <h4 class="w3-center">{{ user.name }}</h4>
+                <p class="w3-center">
                   <img
-                    :src="post.User.avatarUrl"
-                    alt="Avatar"
-                    class="w3-left w3-circle avatar"
+                    v-bind:src="user.avatarUrl"
+                    class="w3-circle profile"
+                    alt="Profile"
                   />
-                  <h4>{{ post.User.name }}</h4>
+                </p>
+                <hr />
+                <p>
+                  <v-icon class="w3-margin-right">work</v-icon>
+                  {{ user.departement }}
+                </p>
+                <p>
+                  <v-icon class="w3-margin-right">location_city</v-icon>
+                  {{ user.email }}
+                </p>
+                <p>
+                  <v-icon class="w3-margin-right">login</v-icon
+                  >{{ formatDate(user.createdAt) }}
+                </p>
+                <div class="w3-margin-bottom">
+                  <v-btn
+                    color="indigo"
+                    dark
+                    @click="viewModal()"
+                    class="w3-margin-right"
+                    title="Mettre à jour mes infos"
+                  >
+                    <v-icon dark>update</v-icon>
+                  </v-btn>
                 </div>
-                <div class="w3-half">
-                  <span class="w3-right w3-margin-top w3-opacity">{{
-                    formatDate(post.User.createdAt)
-                  }}</span>
+              </div>
+              <div v-else>no user</div>
+            </div>
+            <div class="w3-card w3-round">
+              <div class="w3-white">
+                <button
+                  onclick="myFunction('Demo1')"
+                  class="w3-button w3-block w3-theme-l1 w3-left-align"
+                >
+                  <v-icon class="w3-margin-right">groups</v-icon>My Groups
+                </button>
+                <div id="Demo1" class="w3-hide w3-container">
+                  <p>Some text..</p>
                 </div>
-                <br />
-                <header class="w3-container">
-                  <h4>{{ post.title }}</h4>
-                </header>
-                <img
-                  :src="post.imageUrl"
-                  class="w3-image w3-margin-bottom"
-                  :alt="post.title"
-                />
+                <button
+                  onclick="myFunction('Demo2')"
+                  class="w3-button w3-block w3-theme-l1 w3-left-align"
+                >
+                  <v-icon class="w3-margin-right">folder_special</v-icon>
+                  My Events
+                </button>
+                <div id="Demo2" class="w3-hide w3-container">
+                  <p>Some other text..</p>
+                </div>
+                <button
+                  onclick="myFunction('Demo3')"
+                  class="w3-button w3-block w3-theme-l1 w3-left-align"
+                >
+                  <v-icon class="w3-margin-right">camera_alt </v-icon>
+                  Photos
+                </button>
+              </div>
+            </div>
+            <br />
 
-                <div v-if="post.id === btnId">
-                  <div class="w3-margin comments">
-                    <div class="flexContainer">
-                      <div class="imagContent">
-                        <img
-                          :src="Comments.User.avatarUrl"
-                          alt="Avatar"
-                          class="w3-circle profile"
-                        />
-                      </div>
-                      <div class="contentComment">{{ Comments.content }}</div>
-                      <div class="contentCreatedAt">
-                        {{ formatDate(comment.createdAt) }}
+            <!-- Interests -->
+            <div class="w3-card w3-round w3-white w3-hide-small">
+              <div class="w3-container">
+                <h5>Biographie</h5>
+                <p>
+                  {{ user.bio }}
+                </p>
+              </div>
+            </div>
+            <br />
+
+            <!-- End Left Column -->
+          </div>
+          <!-- Middle Column -->
+          <div class="w3-col m6 mainContent">
+            <div v-for="post in allPosts" :key="post.id">
+              <div class="w3-margin-left w3-round w3-margin-right">
+                <div class="w3-card w3-white round w3-padding cardComment">
+                  <div class="w3-half">
+                    <img
+                      :src="post.User.avatarUrl"
+                      alt="Avatar"
+                      class="w3-left w3-circle avatar"
+                    />
+                    <h4>{{ post.User.name }}</h4>
+                  </div>
+                  <div class="w3-half">
+                    <span class="w3-right w3-margin-top w3-opacity">{{
+                      formatDate(post.User.createdAt)
+                    }}</span>
+                  </div>
+                  <br />
+                  <header class="w3-container">
+                    <h4>{{ post.title }}</h4>
+                  </header>
+                  <img
+                    :src="post.imageUrl"
+                    class="w3-image w3-margin-bottom"
+                    :alt="post.title"
+                  />
+
+                  <div v-if="post.id === btnId">
+                    <div class="w3-margin comments">
+                      <div class="flexContainer">
+                        <div class="imagContent">
+                          <img
+                            :src="Comments.User.avatarUrl"
+                            alt="Avatar"
+                            class="w3-circle profile"
+                          />
+                        </div>
+                        <div class="contentComment">{{ Comments.content }}</div>
+                        <div class="contentCreatedAt">
+                          {{ formatDate(comment.createdAt) }}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="w3-margin"
-                  v-for="comment in allComments"
-                  :key="comment.id"
-                >
-                  <div v-if="post.id === comment.postId">
-                    <div class="flexContainer">
-                      <div class="imagContent">
-                        <img
-                          :src="comment.User.avatarUrl"
-                          alt="Avatar"
-                          class="w3-circle profile"
-                        />
+                  <div
+                    class="w3-margin"
+                    v-for="comment in allComments"
+                    :key="comment.id"
+                  >
+                    <div v-if="post.id === comment.postId">
+                      <div class="flexContainer">
+                        <div class="imagContent">
+                          <img
+                            :src="comment.User.avatarUrl"
+                            alt="Avatar"
+                            class="w3-circle profile"
+                          />
+                        </div>
+                        <div class="contentComment">{{ comment.content }}</div>
+                        <div class="contentCreatedAt">
+                          {{ formatDate(comment.createdAt) }}
+                        </div>
                       </div>
-                      <div class="contentComment">{{ comment.content }}</div>
-                      <div class="contentCreatedAt">
-                        {{ formatDate(comment.createdAt) }}
+                      <div class="w3-container">
+                        <button
+                          @click="visiblefunc"
+                          class="w3-button w3-circle w3-black w3-right"
+                          title="Action to remove or modify comments"
+                        >
+                          +
+                        </button>
+                        <div v-if="isVisible">
+                          <v-btn
+                            class="w3-button w3-red w3-margin"
+                            title="Suprimer"
+                            :data-id="comment.id"
+                            @click="deletecomment"
+                          >
+                            <v-icon left dark> delete </v-icon>
+                            suprimer
+                          </v-btn>
+                        </div>
                       </div>
                     </div>
-                    <div class="w3-container">
-                      <button
-                        @click="visiblefunc"
-                        class="w3-button w3-circle w3-black w3-right"
-                        title="Action to remove or modify comments"
-                      >
-                        +
-                      </button>
-                      <div v-if="isVisible">
-                        <v-btn
-                          class="w3-button w3-red w3-margin"
-                          title="Suprimer"
-                          :data-id="comment.id"
-                          @click="deletecomment"
+                  </div>
+                  <div :data-id="post.id" id="formComment" class="show">
+                    <form name="formComment" class="w3-col w3-margin-bottom">
+                      <div class="input-container">
+                        <v-icon dark>edit</v-icon>
+                        <input
+                          class="w3-input w3-border contenteditable"
+                          type="text"
+                          placeholder="Commentaire....."
+                          name="title"
+                          v-model="commentaire"
+                        />
+                        <button
+                          type="button"
+                          @click="sendComment"
+                          :data-id="post.id"
+                          class="w3-button bgBlue"
                         >
-                          <v-icon left dark> delete </v-icon>
-                          suprimer
+                          <v-icon class="w3-margin-right" dark>send</v-icon>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <footer class="w3-margin-top">
+                    <div class="w3-row">
+                      <div class="w3-col m4">
+                        <v-btn title="Aimer le post">
+                          <v-icon large color="blue darken-2">thumb_up</v-icon>
+                        </v-btn>
+                      </div>
+                      <div class="w3-col m4">
+                        <v-btn
+                          class="w3-margin-right"
+                          title="Ne pas aimer le post"
+                        >
+                          <v-icon large color="blue darken-2"
+                            >thumb_down</v-icon
+                          >
+                        </v-btn>
+                      </div>
+                      <div class="w3-col m4">
+                        <v-btn
+                          type="button"
+                          class="w3-margin-left"
+                          title="Commmenter le post"
+                          @click="displayForm"
+                          :data-id="post.id"
+                        >
+                          <v-icon large color="blue darken-2">chat</v-icon>
                         </v-btn>
                       </div>
                     </div>
-                  </div>
+                  </footer>
                 </div>
-                <div :data-id="post.id" id="formComment" class="show">
-                  <form name="formComment" class="w3-col w3-margin-bottom">
-                    <div class="input-container">
-                      <v-icon dark>edit</v-icon>
-                      <input
-                        class="w3-input w3-border contenteditable"
-                        type="text"
-                        placeholder="Commentaire....."
-                        name="title"
-                        v-model="commentaire"
-                      />
-                      <button
-                        type="button"
-                        @click="sendComment"
-                        :data-id="post.id"
-                        class="w3-button bgBlue"
-                      >
-                        <v-icon class="w3-margin-right" dark>send</v-icon>
-                      </button>
-                    </div>
-                  </form>
-                </div>
-                <footer class="w3-margin-top">
-                  <div class="w3-row">
-                    <div class="w3-col m4">
-                      <v-btn title="Aimer le post">
-                        <v-icon large color="blue darken-2">thumb_up</v-icon>
-                      </v-btn>
-                    </div>
-                    <div class="w3-col m4">
-                      <v-btn
-                        class="w3-margin-right"
-                        title="Ne pas aimer le post"
-                      >
-                        <v-icon large color="blue darken-2">thumb_down</v-icon>
-                      </v-btn>
-                    </div>
-                    <div class="w3-col m4">
-                      <v-btn
-                        type="button"
-                        class="w3-margin-left"
-                        title="Commmenter le post"
-                        @click="displayForm"
-                        :data-id="post.id"
-                      >
-                        <v-icon large color="blue darken-2">chat</v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                </footer>
               </div>
             </div>
-            <div
-              v-else
-              class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
-            >
-              <div class="w3-center w3-padding">
-                <h2 class="w3-text-red">aucun post à afficher</h2>
+          </div>
+          <div class="w3-col m3">
+            <div class="w3-card w3-white w3-round w3-center">
+              <div class="w3-container w3-center">
+                <h4>Utilisateurs</h4>
+                <div v-for="user in users" :key="user.id">
+                  <div class="w3-half w3-padding">
+                    <img
+                      :src="user.avatarUrl"
+                      alt="Avatar"
+                      class="w3-circle profile"
+                    />
+                  </div>
+                  <div class="w3-half w3-padding">
+                    <a href="#" @click="linketo">
+                      {{ user.name }}
+                    </a>
+                  </div>
+                  <hr class="w3-margin" />
+                  <br />
+                  <button
+                    class="w3-button w3-red"
+                    title="Suprimer"
+                    :data-id="user.id"
+                    @click="deleteUser"
+                  >
+                    <v-icon left dark> delete </v-icon>
+                    suprimer
+                  </button>
+                </div>
+                <br />
               </div>
             </div>
+            <br />
+            <!-- End Right Column -->
           </div>
         </div>
-        <div class="w3-col m3">
-          <div class="w3-card w3-white w3-round w3-center">
-            <div class="w3-container w3-center">
-              <h4>Utilisateurs</h4>
-              <div v-for="user in users" :key="user.id">
-                <div class="w3-half w3-padding">
-                  <img
-                    :src="user.avatarUrl"
-                    alt="Avatar"
-                    class="w3-circle profile"
-                  />
-                </div>
-                <div class="w3-half w3-padding">
-                   <a href="#" @click="linketo">                   
-                 {{ user.name }}
-                  </a>
-                 
-                </div>
-                <hr class="w3-margin" />
-                <br />
-                <button
-                  class="w3-button w3-red"
-                  title="Suprimer"
-                  :data-id="user.id"
-                  @click="deleteUser"
-                >
-                  <v-icon left dark> delete </v-icon>
-                  suprimer
-                </button>
-              </div>
-              <br />
-            </div>
-          </div>
-          <br />
-          <!-- End Right Column -->
+      </div>
+      <div
+        v-else
+        class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
+      >
+        <div class="w3-center w3-padding">
+          <h2 class="w3-text-red">aucun post à afficher</h2>
         </div>
       </div>
     </div>
@@ -343,12 +300,14 @@ export default {
       allComments: {},
       isModalvisible: false,
       btnId: localStorage.getItem("btnId"),
+      havePost: false,
+      haveUser: false,
     };
   },
   components: { Modal },
   methods: {
-    linketo(){
-     window.location.href= "/AllUserPage";
+    linketo() {
+      window.location.href = "/AllUserPage";
     },
     visiblefunc() {
       this.isVisible = !this.isVisible;
@@ -359,7 +318,7 @@ export default {
       this.$axios
         .delete(`comments/${eventId}`, { data: { user: this.user.isAdmin } })
         .then(() => {
-             window.location.reload();
+          window.location.reload();
         })
         .catch((err) => console.error(err));
     },
@@ -396,11 +355,15 @@ export default {
     getallPosts: function () {
       this.$axios.get("post/").then((dataPost) => {
         this.allPosts = dataPost.data;
+        if (this.allPosts) {
+          this.havePost = true;
+        } else {
+          this.havePost = false;
+        }
       });
     },
     displayForm: function (event) {
-      let buttonId = event.target.parentNode.parentNode.dataset.id;
-      console.log(buttonId);
+      let buttonId = event.target.parentNode.parentNode.dataset.id;     
       let child =
         event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling;
@@ -408,8 +371,7 @@ export default {
         event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling.dataset.id;
       this.containBtn = [];
-      this.containBtn.push(child);
-      console.log(child);
+      this.containBtn.push(child);     
       if (buttonId === container) {
         if (child.className === "show") {
           child.classList.add("active");
@@ -469,13 +431,19 @@ export default {
         });
     },
   },
-
+  computed: {
+    /* if(_User){
+   console.log(this.User)
+ }*/
+  },
   created() {
     this.getallPosts();
     this.get();
   },
   mounted() {
-    this.getUserDetails;
+    if (this.getUserDetails) {
+      this.haveUser = true;
+    }
     this.getallUsers();
   },
   mixins: [auth],

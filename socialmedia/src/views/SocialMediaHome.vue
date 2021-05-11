@@ -2,6 +2,7 @@
   <div class="w3-container socialMedia">
     <!-- Page Container -->
     <div class="w3-container w3-content contentPage">
+       <div v-if="havePost" >
       <!-- The Grid -->
       <div class="w3-row">
         <!-- Left Column -->
@@ -33,7 +34,6 @@
           <!-- Middle Column -->
           <div class="w3-col m6">
             <div v-for="post in allPosts" :key="post.id">
-              <div v-if="post" >
                 <div class="w3-card  w3-container w3-white round w3-padding w3-margin-bottom Centercontainer">
                   <div class="w3-half">
                     <img
@@ -152,16 +152,10 @@
                   </footer>
                 </div>
               </div>
-              <div
-                v-else
-                class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
-              >
-                <div class="w3-center w3-padding">
-                  <h2 class="w3-text-red">aucun post à afficher</h2>
-                </div>
-              </div>
+
+             
             </div>
-          </div>
+         
           <!-- End Middle Column -->
           <!-- Right Column -->
           <div class="w3-col m3">
@@ -188,25 +182,35 @@
             <!-- End Right Column -->
           </div>
           <br />
-        </div>
+        </div>        
         <div v-else>
           <AdminPage />
             </div>               
-              </div>
+             
               <div v-if="(isModalvisible = true)">
                 <Modal />
               </div>
               <!-- End Page Container -->
+            </div> 
+            </div>
+             <div
+                v-else
+                class="w3-container w3-margin-left w3-card w3-white w3-round w3-margin-right"
+              >
+                <div class="w3-center w3-padding">
+                  <h2 class="w3-text-red">aucun post à afficher</h2>
+                
+              </div>
             </div>
           </div>
-       
+  </div>
   <!-- End Grid -->
 
   <!-- End Page Container -->
 </template>
 <script>
 import auth from "../mixins/auth";
-import profil from "../mixins/getUserProfil";
+
 import moment from "moment";
 import axios from "axios";
 const AdminPage = () => import("@/components/AdminPage.vue");
@@ -220,27 +224,28 @@ export default {
       users: {},
       allPosts: {},
       show: false,
-      isVisible:false,
+      isVisible: false,
       comment: "",
       commentaire: "",
       active: false,
       allComments: {},
       isModalvisible: false,
+      havePost: false,
       btnId: localStorage.getItem("btnId"),
     };
   },
-  components: { Modal ,AdminPage},
+  components: { Modal, AdminPage },
   methods: {
-    visiblefunc(){
-      this.isVisible = ! this.isVisible;
+    visiblefunc() {
+      this.isVisible = !this.isVisible;
     },
     getallUsers: function () {
       axios.get("user/users").then((datausers) => {
         this.users = datausers.data;
       });
     },
-    linketo(){
-     window.location.href= "/AllUserPage";
+    linketo() {
+      window.location.href = "/AllUserPage";
     },
     viewModal: function () {
       this.isModalvisible = true;
@@ -271,6 +276,11 @@ export default {
     getallPosts: function () {
       this.$axios.get("post/").then((dataPost) => {
         this.allPosts = dataPost.data;
+        if (this.allPosts) {
+          this.havePost = true;
+        } else {
+          this.havePost = false;
+        }
       });
     },
     displayForm: function (event) {
@@ -314,18 +324,15 @@ export default {
       }
     },
     deleteUser: function (event) {
-       let id = event.target.dataset.id;
-       console.log(id)
-       console.log(this.user.isAdmin)
-     this.$axios
-        .delete(`user/${id}`, { data: { id: id , user:this.user.isAdmin} })
+      let id = event.target.dataset.id;
+      console.log(id);
+      console.log(this.user.isAdmin);
+      this.$axios
+        .delete(`user/${id}`, { data: { id: id, user: this.user.isAdmin } })
         .then((response) => {
-          (this.submitStatus = "OK"),
-           this.$router.go("/Admin");
+          (this.submitStatus = "OK"), this.$router.go("/Admin");
         })
-        .catch((error) =>          
-          console.log(error)
-        );
+        .catch((error) => console.log(error));
     },
     get() {
       // Récupère les commentaire
@@ -365,12 +372,11 @@ export default {
 }
 .contentPage {
   max-width: 1200px;
-  margin-top:40px;
+  margin-top: 40px;
 }
-.Centercontainer{
-  margin-left:16px;
-  margin-right:16px;
-
+.Centercontainer {
+  margin-left: 16px;
+  margin-right: 16px;
 }
 .flexContainer {
   display: flex;
@@ -430,26 +436,24 @@ export default {
 
 @media (max-width: 768px) {
   .contentPage {
-   margin-top: 80px;
-}
+    margin-top: 80px;
+  }
   .mainContent {
     margin-bottom: 16px;
   }
   .flexContainer {
     flex-direction: column;
   }
-  .Centercontainer{
-  margin-left:0px;
-  margin-right:0px;
-
+  .Centercontainer {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 }
-
-}
-@media(min-width:800px){
- .firstSection {
-  margin: 0 10px;
-}
-.contentPage {
+@media (min-width: 800px) {
+  .firstSection {
+    margin: 0 10px;
+  }
+  .contentPage {
     margin-top: 100px;
   }
 }
