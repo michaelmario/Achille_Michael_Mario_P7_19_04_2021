@@ -200,18 +200,16 @@
                   <footer class="w3-margin-top">
                     <div class="w3-row">
                       <div class="w3-col m5 w3-center">
-                         <button
-                          title="Aimer le post"                          
-                          :data-id="post.id" >
+                        <button title="Aimer le post" :data-id="post.id">
                           <v-icon large color="blue darken-2">thumb_up</v-icon>
                         </button>
                         <span>{{ like }}</span>
                       </div>
-                       <div class="w3-col m5 w3-center">
+                      <div class="w3-col m5 w3-center">
                         <v-btn
                           type="button"
                           class="w3-margin-left marginTopSmall"
-                          title="Commmenter le post"
+                          title="Commenter le post"
                           @click="displayForm"
                           :data-id="post.id"
                         >
@@ -276,7 +274,6 @@
 import auth from "../mixins/auth";
 import moment from "moment";
 import axios from "axios";
-
 const Modal = () => import("@/components//Modal.vue");
 export default {
   name: "AdminPage",
@@ -295,17 +292,19 @@ export default {
       btnId: localStorage.getItem("btnId"),
       havePost: false,
       haveUser: false,
-      like:0
+      like: 0,
     };
   },
   components: { Modal },
   methods: {
+    //Lien pour les utilisateurs
     linketo() {
       window.location.href = "/AllUserPage";
     },
     visiblefunc() {
       this.isVisible = !this.isVisible;
     },
+    // Suprimer un commentaire
     deletecomment(event) {
       let eventId = event.target.parentNode.dataset.id;
       console.log(eventId);
@@ -316,17 +315,20 @@ export default {
         })
         .catch((err) => console.error(err));
     },
+    // Récupèrer les utilisateurs
     getallUsers: function () {
       axios.get("user/users").then((datausers) => {
         this.users = datausers.data;
       });
     },
+    //Affiche le modal
     viewModal: function () {
       this.isModalvisible = true;
       let modal = document.getElementById("messoutput");
       modal.style.display = "block";
       modal.style.zIndex = "4";
     },
+    //Suprimer un post
     deletePost: function (event) {
       let id = event.target.dataset.id;
       this.allPosts.forEach(function (value) {
@@ -334,18 +336,19 @@ export default {
           this.$axios
             .delete(`post/:${id}`, { data: { id: id } })
             .then(() => {
-              //window.location.reload();
+              window.location.reload();
             })
             .catch((err) => console.error(err));
         }
       });
     },
-
+    //Convertir le format date
     formatDate(date) {
       moment.locale();
       let tanggal = moment(date).format("ddd,ha");
       return tanggal;
     },
+    //Récupèrer les post
     getallPosts: function () {
       this.$axios.get("post/").then((dataPost) => {
         this.allPosts = dataPost.data;
@@ -356,8 +359,9 @@ export default {
         }
       });
     },
+    //Affiche le form pour ecrire les commentaires
     displayForm: function (event) {
-      let buttonId = event.target.parentNode.parentNode.dataset.id;     
+      let buttonId = event.target.parentNode.parentNode.dataset.id;
       let child =
         event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling;
@@ -365,7 +369,7 @@ export default {
         event.target.parentNode.parentNode.parentNode.parentNode.parentElement
           .previousSibling.dataset.id;
       this.containBtn = [];
-      this.containBtn.push(child);     
+      this.containBtn.push(child);
       if (buttonId === container) {
         if (child.className === "show") {
           child.classList.add("active");
@@ -375,8 +379,8 @@ export default {
         }
       }
     },
+    //Envoyer le commentaire
     sendComment: async function (event) {
-      /*let newComment = event.target.parentNode.parentNode.children[1].value;*/
       let btnId = localStorage.getItem("btnId");
       if (btnId) {
         const send = this.$axios.post("comments/", {
@@ -394,6 +398,7 @@ export default {
           });
       }
     },
+    //Suprimer un utilisateurs
     deleteUser: function (event) {
       let id = event.target.dataset.id;
       console.log(id);
@@ -401,18 +406,12 @@ export default {
       this.$axios
         .delete(`user/${id}`, { data: { id: id, user: this.user.isAdmin } })
         .then((response) => {
-          (this.submitStatus = "OK"),
-            console.log(response),
-            this.$router.go("/Admin");
+          (this.submitStatus = "OK"), window.location.reload();
         })
-        .catch((error) =>
-          // (this.submitStatus = "ERROR SERVEUR"),
-          console.log(error)
-        );
+        .catch((error) => console.log(error));
     },
-
-    get() {
-      // Récupère les commentaire
+    // Récupère les commentaire
+    getallcomment() {
       this.$axios
         .get("comments/")
         .then((data) => {
@@ -424,35 +423,37 @@ export default {
           }
         });
     },
-     getLike(){
-     this.$axios
-        .get(`post/:id/like`,{ data: { id: this.user.id } })
+    //Récupèrer les like
+    getLike() {
+      this.$axios
+        .get(`post/:id/like`, { data: { id: this.user.id } })
         .then((data) => {
-           if ((data.statusText = "OK")) {
+          if ((data.statusText = "OK")) {
             if (this.like === 0) {
               this.like = +1;
             } else if (data.statusText != "ok") {
               this.like = 0;
             }
-          }         
-        }).catch((e) => {
+          }
+        })
+        .catch((e) => {
           if (e) {
             console.error(e);
           }
         });
-     }
-  }, 
-  
+    },
+  },
+
   created() {
     this.getallPosts();
-    this.get();
     this.getLike();
+    this.getallUsers();
+    this.getallcomment();
   },
   mounted() {
     if (this.getUserDetails) {
       this.haveUser = true;
     }
-    this.getallUsers();
   },
   mixins: [auth],
 };
@@ -534,8 +535,8 @@ export default {
   .flexContainer {
     flex-direction: column;
   }
-  .marginTopSmall{
-    margin-top:16px;
+  .marginTopSmall {
+    margin-top: 16px;
   }
 }
 @media (max-width: 900px) {

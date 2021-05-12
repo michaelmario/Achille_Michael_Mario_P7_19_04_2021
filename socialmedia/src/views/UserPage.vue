@@ -93,10 +93,10 @@
                       v-model="user.departement"
                     >
                       <option value="" disabled>Departement</option>
-                      <option value="commercial">Commercial</option>
-                      <option value="marketing">Marketing</option>
-                      <option value="financiere">Financière</option>
-                      <option value="juridique">Juridique</option>
+                      <option value="Commercial">Commercial</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Financiere">Financière</option>
+                      <option value="Juridique">Juridique</option>
                     </select>
                   </div>
                   <span class="w3-text-red"></span>
@@ -253,9 +253,10 @@ export default {
         // return error in production env
         console.log(error, "error from decoding token");
       }
-    },
+    }, 
+    // update le profil
     updateUserProfil: function (e) {
-      // update le profil
+     
       let newUser = {
         name: this.user.name,
         email: this.user.email,

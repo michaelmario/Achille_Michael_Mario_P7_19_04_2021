@@ -144,7 +144,7 @@
                         <v-btn
                           type="button"
                           class="w3-button w3-theme-d2 w3-margin-bottom marginTopSmall"
-                          title="Commmenter le post"
+                          title="Commenter le post"
                           @click="displayForm"
                           :data-id="post.id"
                         >
@@ -210,7 +210,6 @@
 </template>
 <script>
 import auth from "../mixins/auth";
-
 import moment from "moment";
 import axios from "axios";
 const AdminPage = () => import("@/components/AdminPage.vue");
@@ -286,14 +285,14 @@ export default {
       });
     },
     displayForm: function (event) {
-      let buttonId = event.target.parentNode.dataset.id;
-
-      let child =
-        event.target.parentNode.parentNode.parentNode.parentElement
-          .previousSibling;
+      let buttonId = event.target.parentNode.parentNode.dataset.id;
+     console.log(buttonId)
+     let child =
+        event.target.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling;
+          console.log(child)
       let container =
-        event.target.parentNode.parentNode.parentNode.parentElement
-          .previousSibling.dataset.id;
+        event.target.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling.dataset.id;
+          
       this.containBtn = [];
       this.containBtn.push(child);
       console.log(this.containBtn);
@@ -307,7 +306,6 @@ export default {
       }
     },
     sendComment: async function (event) {
-      /*let newComment = event.target.parentNode.parentNode.children[1].value;*/
       let btnId = localStorage.getItem("btnId");
       if (btnId) {
         const send = this.$axios.post("comments/", {
