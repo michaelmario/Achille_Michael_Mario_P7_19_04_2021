@@ -88,7 +88,9 @@
             </div>
           </div>
           <div
-            class="w3-margin-top w3-margin-bottom cardBorder w3-padding">
+            class="w3-col m12 w3-margin-bottom cardBorder w3-padding">
+            <div
+            class="w3-col m4">
             <button
               type="submit"
               class="w3-btn w3-red w3-text-white btn"
@@ -99,7 +101,12 @@
               <v-icon left dark> delete </v-icon>
               Suprimer
             </button>
-          </div>
+            </div>         
+          <div
+            class="w3-col m6 ">
+            <h4 class="w3-text-red">{{messageError}}</h4>
+            </div> 
+            </div>
         </div>
         </div>
       </div>     
@@ -134,7 +141,7 @@ export default {
           window.location.reload();
         })
         .catch((e) => {
-          console.log(e);
+          this.messageError = "Limage doit etre au format Gifs et le Titre que des alphabet est accepter" 
         });
     },
 
@@ -145,11 +152,7 @@ export default {
     },
     deletePost: function (event) {
       let id = event.target.dataset.id;
-      this.allPosts.forEach(function (value) {
-        if (id === value.id) {
-        }
-      });
-      this.$axios
+       this.$axios
         .delete(`post/:${id}`, { data: { id: id , user:this.user.isAdmin} })
         .then(() => {
           window.location.reload();

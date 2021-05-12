@@ -256,7 +256,6 @@ export default {
     },
     deletePost: function (event) {
       let id = event.target.dataset.id;
-      console.log(id);
       this.allPosts.forEach(function (value) {
         if (id === value.id) {
           this.$axios
@@ -368,15 +367,19 @@ export default {
     },
 
     getLike(){
-     this.$axios
-        .get(`post/:id/like`,{ data: { id: this.user.id } })
+       let userId = this.$options.parent.$children[0].User.userId;
+       this.$axios
+        .get(`post/${userId}/like `)
         .then((data) => {
            if ((data.statusText = "OK")) {
-            if (this.like === 0) {
-              this.like = +1;
-            } else if (data.statusText != "ok") {
-              this.like = 0;
-            }
+             let likesData = dtata.data.userId;
+             let postDta = data.data.postId;
+             if(data.data.id > -1){
+              this.like++ 
+             }else{
+               this.like--
+             }
+          
           }         
         }).catch((e) => {
           if (e) {
@@ -385,11 +388,16 @@ export default {
         });
 
     },
-    
+    afficePost(){
+     
+     // console.log(this.$options.parent)
+
+     }
   },
 
   created() {
     this.getallPosts();
+     this.afficePost();
     this.get();
     this.getLike();
   },

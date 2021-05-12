@@ -63,16 +63,17 @@ exports.getAllPosts = (req, res) => {
 };
  // Update Post in the database
 exports.modifyPost = (req, res) => {
-  const title = regex.test(req.body.title)
+  const title = req.body.title;
   if (req.file == undefined) {
     res.status(422).json({ msg: 'Error: No File Selected!' });
   } else {
     const token = jwt.getUserId(req.headers.authorization);
     const userId = token.userId;
     const postId = req.params.id;
+    const isAdmin = req.body.user;
     models.Post.findOne({ where: { id: postId } })
       .then((post) => {
-        if (post.userId == userId) {
+        if (post.userId == userId || isAdmin) {
           const filename = post.imageUrl.split("images/")[1];
           fs.unlinkSync(`images/${filename}`);
 
@@ -172,12 +173,16 @@ exports.like = (req, res, next) => {
           } else {
             res.status(403).json({ message: "Action non autorisée." });
           }
-        } else {
+        } else {      
+          let likes = [];
           models.PostLikes.create({ UserId: userId, PostId: data.id })
             .then((data) => {
+              likes.push(1)
                models.PostLikes.findOne({
-                where: { UserId: userId, PostId: data.id },
-                include: [
+                where: { UserId: userId, PostId: data.id },                  
+                   include: [  {
+                    data:likes,
+                   },                 
                   {
                     model: models.User,
                     attributes: [
@@ -201,11 +206,12 @@ exports.like = (req, res, next) => {
 }
 //get All Like
 exports.getLikesFromPost = (req, res, next) => {
+  console.log(req.params.id)
   if (!req.params.id) {
     res.status(400).json({ message: "Requête erronée." });
   } else {
     models.PostLikes.findAll({
-      where: { postId: req.params.id },
+      where: { userId: req.params.id },
       include: [
         {
           model: models.User,

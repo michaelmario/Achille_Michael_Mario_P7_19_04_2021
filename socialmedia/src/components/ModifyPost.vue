@@ -51,7 +51,7 @@
             
           </div>
           <hr class="cardBorder" />
-          <div class="w3-margin-top">
+          <div class="w3-col m4 w3-margin-top">
             <button
               type="submit"
               class="w3-btn w3-red w3-text-white btn"
@@ -62,6 +62,9 @@
               Modifier
             </button>
           </div>
+            <div class="w3-col m6 w3-margin-top">
+              <h4 class="w3-text-red">{{errMsg}}</h4>
+              </div>
         </form>      
       </div>      
     </div>
@@ -80,18 +83,21 @@ export default {
       allPosts: {},
       title: "",
       id: "",
+      errMsg:""
+    
     };
   },
   methods: {
     modifyPost: function (event) {
+      let  Titleregex = new RegExp(/[a-zA-z]./gi);
       const title = event.target.title.value;
      let custId = event.target.parentNode.children[3].children[3].children[0].id;
-      const image = event.target.image.files[0];
- 
+      const image = event.target.image.files[0]; 
       console.log(image)
-      console.log(title)
+      console.log(Titleregex.test(title))
      let formData = new FormData();
       formData.append("title", this.title);
+      formData.append("user", this.user.isAdmin);
       formData.append("image", image);     
       this.$axios
         .put(`post/${custId}`, formData)
@@ -99,7 +105,7 @@ export default {
           window.location.reload();
         })
         .catch((e) => {
-          console.log(e);
+          this.errMsg = "l'image doit etre au format Gifs";
         });
     },
   },
