@@ -25,6 +25,10 @@
                 <v-icon class="w3-margin-right">login</v-icon
                 >{{ formatDate(user.createdAt) }}
               </p>
+              <p>
+                <v-icon class="w3-margin-right">update</v-icon
+                >{{ formatDate(user.updatedAt) }}
+              </p>
         </div>
       </div>
     </div>

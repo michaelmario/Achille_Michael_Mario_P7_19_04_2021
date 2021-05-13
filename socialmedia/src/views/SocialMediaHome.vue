@@ -113,7 +113,7 @@
                           type="text"
                           placeholder="Commentaire....."
                           name="title"
-                          v-model="commentaire"
+                          v-model="comment"
                         />
                         <button
                           type="button"
@@ -304,18 +304,16 @@ export default {
         }
       }
     },
-    sendComment: async function (event) {
+    sendComment:function () {
       let btnId = localStorage.getItem("btnId");
       if (btnId) {
-        const send = this.$axios.post("comments/", {
-          content: this.commentaire,
+        this.$axios.post("comments/", {
+          content: this.comment,
           postId: btnId,
-        });
-        await send
-          .then((data) => {
+        }).then(() => {
             localStorage.removeItem("btnId");
             window.location.reload();
-            this.commentaire = "";
+            this.comment = "";
           })
           .catch((e) => {
             console.log(e);
@@ -372,12 +370,12 @@ export default {
         .get(`post/${userId}/like `)
         .then((data) => {
            if ((data.statusText = "OK")) {
-             let likesData = dtata.data.userId;
-             let postDta = data.data.postId;
+           /*  let likesData = dtata.data.userId;
+             let postDta = data.data.postId;*/
              if(data.data.id > -1){
-              this.like++ 
+              this.like = this.like++ 
              }else{
-               this.like--
+               this.like = this.like
              }
           
           }         

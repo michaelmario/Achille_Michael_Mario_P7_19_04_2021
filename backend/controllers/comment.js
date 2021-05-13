@@ -8,6 +8,7 @@ const regex = /^[A-Za-z\d\s.,;:!?"()/%-_'éèêëà#@ô^öù*ç€$£≠÷°]*$/
 // Add comment in the database 
 exports.addComment = (req, res) => {
   const data = req.body;
+  console.log(data)
   if (
     !data ||
     !data.content ||

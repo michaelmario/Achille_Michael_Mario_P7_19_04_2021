@@ -188,7 +188,7 @@
                         />
                         <button
                           type="button"
-                          @click="sendComment"
+                          @click="sendAdminComment"
                           :data-id="post.id"
                           class="w3-button bgBlue"
                         >
@@ -380,14 +380,14 @@ export default {
       }
     },
     //Envoyer le commentaire
-    sendComment: async function (event) {
+    sendAdminComment: function () {
       let btnId = localStorage.getItem("btnId");
       if (btnId) {
-        const send = this.$axios.post("comments/", {
+        console.log(this.commentaire)
+       this.$axios.post("comments/", {
           content: this.commentaire,
           postId: btnId,
-        });
-        await send
+        })     
           .then((data) => {
             localStorage.removeItem("btnId");
             window.location.reload();
