@@ -14,7 +14,7 @@
                   <img
                     v-bind:src="user.avatarUrl"
                     class="w3-circle profile"
-                    alt="Profile"
+                    alt="Profil"
                   />
                 </p>
                 <hr />
@@ -93,7 +93,7 @@
           <div class="w3-col m6 mainContent">
             <div v-for="post in allPosts" :key="post.id">
               <div class="w3-margin-left w3-round w3-margin-right">
-                <div class="w3-card w3-white round w3-padding cardComment">
+                <div class="w3-card w3-white w3-margin-bottom round w3-padding cardComment">
                   <div class="w3-half">
                     <img
                       :src="post.User.avatarUrl"
@@ -169,7 +169,7 @@
                             @click="deletecomment"
                           >
                             <v-icon left dark> delete </v-icon>
-                            suprimer
+                            supprimer
                           </v-btn>
                         </div>
                       </div>
@@ -248,7 +248,7 @@
                     @click="deleteUser"
                   >
                     <v-icon left dark> delete </v-icon>
-                    suprimer
+                    supprimer
                   </button>
                 </div>
                 <br />

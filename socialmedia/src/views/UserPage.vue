@@ -39,7 +39,7 @@
                   title="Supprimer mes infos"
                 >
                   <v-icon left> delete </v-icon>
-                  Suprimer
+                  Supprimer
                 </v-btn>
                 <div v-if="messageError">
                   {{ messageError }}

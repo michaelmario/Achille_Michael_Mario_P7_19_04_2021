@@ -28,7 +28,7 @@
                       title="Profile"
                     >
                       <v-icon left> user </v-icon>
-                      Profile
+                      Profil
                     </v-btn>
                   </div>
                 </div>

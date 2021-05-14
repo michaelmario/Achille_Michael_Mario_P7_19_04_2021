@@ -47,7 +47,7 @@ function checkFileType(file, cb) {
   }
 }
 // MIDDLEWARE SIGNUP  - Inscription de l'utilisateur et hashage du mot de passe
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
   const data = {
     name: req.body.name,
     email: req.body.email,
@@ -67,6 +67,7 @@ exports.signup = (req, res, next) => {
           message: "Email already exists!",
         });
       }
+     
 
       bcryptjs.genSalt(10, function (err, salt) {
         bcryptjs.hash(req.body.password, salt, function (err, hash) {
@@ -74,7 +75,7 @@ exports.signup = (req, res, next) => {
             name: data.name,
             email: data.email,
             departement: data.departement,
-            avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+            avatarUrl: '/images/uploads/Nash.jpeg',
             password: hash
           }
 
@@ -88,14 +89,15 @@ exports.signup = (req, res, next) => {
             });
           });
         })
-      }).catch(error => {
-        res.status(500).json({
-          message: "Something went wrong!",
-        });
-      });
-    })
-  }
+      })  
+  }).catch(error => {
+      res.status(409).json({
+        message: "Email already exists!",
+      })
+  })
 }
+ }
+
 
 
 // MIDDLEWARE LOGIN avec vérification de l'email unique

@@ -105,6 +105,7 @@
               />
             </div>
             <span class="w3-text-red">{{ confimPasswordErrors }}</span>
+            <div class="w3-center w3-text-red">{{ Errors }}</div>
           </div>
           <div class="w3-center">
             <button type="submit" class="w3-button bgBlue w3-margin-right">
@@ -151,7 +152,7 @@
               />
             </div>
             <div class="w3-text-red w3-padding">{{ loginPasswordErrors }}</div>
-            <div class="w3-text-green w3-padding w3-margin-top">{{
+            <div class="w3-text-green w3-center w3-padding w3-margin-top">{{
               loginSucess
             }}</div>
           </div>
@@ -186,6 +187,7 @@ export default {
     return {
       active: false,
       data: {},
+      Errors:"",
       nameErrors: "",
       emailErrors: "",
       optionErrors: "",
@@ -291,27 +293,20 @@ export default {
         axios
           .post("http://localhost:3000/api/user/signup", this.data)
           .then((data) => {
-            this.active = !this.active;
-          })
-          .then(() => {
+            if(data){
+             this.active = !this.active;
             this.loginSucess =
-              "Votre compte a etait crée vous pouvez connectez Maintenant ";
-              toast({
-                type:'success',
-                title:'Vous pouvez connectez Maintenant'
-              })
-          })
+              "Votre compte a été crée vous pouvez connecter Maintenant";
+            }else{
+              this.Errors = "Vos données n'ont pas été formatées correctement";
+            }
+          })         
           .catch((e) => {
             if (e) {
-              this.loginPasswordErrors = `Aucun compte ne correspond à l'adresse email renseingée !`;
-            }
-          })
-          .catch((e) => {
-            if (e) {
-              this.confimPasswordErrors = "Erreur serveur";
-            }
-            sessionStorage.removeItem("token");
-          });
+              this.Errors = `Cet utilisateur existe déjà `;
+            } 
+          
+          })         
       }
     },
     initialiser: function (e) {
@@ -321,6 +316,7 @@ export default {
       this.optionErrors = "";
       this.passwordErrors = "";
       this.confimPasswordErrors = "";
+      this.Errors = "";
     },
 
     initialiserLogin: function (e) {

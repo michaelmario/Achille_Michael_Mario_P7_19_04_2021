@@ -43,6 +43,8 @@
             </div>
             <hr />
             <div class="w3-margin-top">
+              <div
+            class="w3-col m4">
               <button
                 type="submit"
                 class="w3-btn bgBlue w3-text-white btn"
@@ -50,6 +52,18 @@
               >
                 Envoyer
               </button>
+              <button
+              type="button"
+              class="w3-button bgBlue  w3-text-white w3-margin-left marginTopSmall"
+              @click="initialiser"
+            >
+              initialiser
+            </button>
+            </div>
+            </div>
+            <div
+            class="w3-col m6">
+             <h4 class="w3-text-red">{{messageError}}</h4>
             </div>
           </div>
         </form>
@@ -143,6 +157,11 @@ export default {
         .catch((e) => {
           this.messageError = "Limage doit etre au format Gifs et le Titre que des alphabet est accepter" 
         });
+    },
+     initialiser: function (e) {
+      window.location.reload();
+      this.messageError = "";
+      
     },
 
     formatDate(date) {
